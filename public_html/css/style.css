@@ -414,10 +414,9 @@ h4 {
     width: 40%;
 }
 
-
 #body-principal main > section.minhas-materias .setinha-indicadora:before {
     content: "\25BC"!important;
-    color: #486a86;
+    color: rgba(72, 106, 134, 0.8);
     line-height: 40px;
     webkit-transition: width 2s;
     -webkit-transition: width 2s;
@@ -478,6 +477,17 @@ h4 {
     text-align: center;
 }
 
+.collapsible-body {
+    background-color: #fff;
+}
+
+#section-materias #div-loading {
+    background-color: #fff;
+}
+
+.progress {
+    margin:0;
+}
 
 /* FIM DA CORREÇÃO */
 
@@ -534,7 +544,7 @@ h4 {
 }
 
 #body-principal .menu {
-    background: #486a86;
+    background: rgba(72, 106, 134, 0.8);
     height: 100%;
     width: 240px;
     position: fixed;
@@ -546,6 +556,8 @@ h4 {
     outline: none;
     -webkit-box-shadow: .5vmin 0 0 rgba(0, 0, 0, .30);
     box-shadow: .5vmin 0 0 rgba(0, 0, 0, .30);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
 }
 
 #body-principal .menu .avatar {
@@ -666,7 +678,7 @@ h4 {
         top: 0;
         max-width: 60px;
         min-width: 50px;
-        background-color: #486a86;
+        background-color: rgba(72, 106, 134, 0.8);
         text-decoration: none;
         text-align: center;
         border-bottom-right-radius: 3px;
@@ -751,7 +763,7 @@ h4 {
 }
 
 #imgChangeButton, #imgSaveButton, #imgCancelButton {
-    background-color: #486a86!important;
+    background-color: rgba(72, 106, 134, 0.8)!important;
     padding: 0em 0em!important;
 }	
 
@@ -883,7 +895,7 @@ h4 {
     outline: none;
     margin: auto;
     width: 80%!important;
-    background: #fff;
+    /*    background: #fff;*/
     transition: opacity 1s;
     -webkit-transition: opacity 1s;
     -webkit-box-shadow: .5vmin .5vmin 0 rgba(0, 0, 0, .30)!important;
@@ -892,7 +904,7 @@ h4 {
 
 #body-principal .box-padrao h3,
 body-principal .box-padrao h4 {
-    background: #486a86;
+    background: rgba(72, 106, 134, 0.8);
     padding: .1em;
     font-weight: 300;
     text-align: center;
@@ -907,7 +919,8 @@ body-principal .box-padrao h4 {
 }
 
 #body-principal #form-perfil-div {
-    margin-top: 1em;
+    padding-top: 1em;
+    background-color: #fff;
 }
 
 #body-principal #btn-atualizar-perfil, #body-principal #btn-limpar-perfil {
@@ -1064,7 +1077,7 @@ body-principal .box-padrao h4 {
 #body-principal .browser {
     overflow: hidden;
     white-space: nowrap;
-    background: #486a86;
+    background: rgb(72, 106, 134);
     width: 100%;
 }
 
@@ -1239,7 +1252,7 @@ body-principal .box-padrao h4 {
 
 
 #body-principal .tabs .tab a:hover, .tabs .tab a.active{
-    color: #486a86!important;
+    color: rgba(72, 106, 134, 0.8)!important;
 }
 
 .tabs .tab a.active {
@@ -1247,7 +1260,7 @@ body-principal .box-padrao h4 {
 }
 
 #body-principal .tabs .tab a {
-    color: #486a868a;
+    color: rgba(72, 106, 134, 0.8);
 }
 
 #body-principal .tabs .indicator {
@@ -1283,6 +1296,10 @@ body-principal .box-padrao h4 {
 /*----------------Graficos de indices----------------*/
 
 /*---------------------------------------------------*/
+
+#section-perfil > div > div {
+    background-color: #fff;
+}
 
 #section-perfil > div > div > ul > li > div.pie-charts.collapsible-body.col.s12.row {
     float: left;

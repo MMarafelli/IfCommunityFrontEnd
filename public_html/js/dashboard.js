@@ -485,7 +485,7 @@ function montaPostagens(postagens) {
         var textoPostagem = this.postText;
         var autorPostagem = this.authorName;
         var tituloPostagem = this.title;
-        var dataPostagem = this.registerDate; 
+        var dataPostagem = this.registerDate;
         var materiaPostagem = this.matterName;
         var IDPostagem = this.postId;
         var linguagemPostagem = this.programmingLanguage;
@@ -607,21 +607,31 @@ function adicionaPostagens(textoPostagem, autorPostagem, tituloPostagem, dataPos
 
 function retornaMaterias() {
     $.ajax({
-        url: "RecuperaMateriasTelaAdicionar",
-        type: 'post',
-        timeout: 6000,
+        url: "https://ifcommunity.herokuapp.com/matter",
+        type: 'get',
+//        contentType: "application/json",
+//        crossDomain: true,
         beforeSend: function () {
             $("#section-materias #div-loading").show();
         }
     })
             .done(function (materiasJSON) {
-                $("#section-materias #div-loading").hide();
+//                console.log(materiasJSON);
+
+//                $("#section-materias #div-loading").hide();
                 periodoMateria = [];
 
                 $(".adicionar-materias div.box-padrao .row > ul.collapsible").empty();
-                for (var i = 0; i < materiasJSON.length; i++) {
-                    periodoMateria.push(materiasJSON[i]);
-                }
+
+                $(jQuery.parseJSON(JSON.stringify(materiasJSON))).each(function () {
+                    var matterId = this.matterId;
+                    var matterName = this.matterName;
+                    var period = this.period;
+
+                    var materiaPeriodo = matterName + ";" + period;
+//                    console.log(materiaPeriodo);
+                    periodoMateria.push(materiaPeriodo);
+                });
 
                 gerenciarMateriasConteudo();
 
@@ -769,24 +779,26 @@ function atualizaMaterias() {
         checkedNasMateriasDoMenu();
     }
 
-    atualizaMateriasTelaAdicionar(materias, $("#id-usuario").text());
+    atualizaMateriasTelaAdicionar(materias);
 
-    function atualizaMateriasTelaAdicionar(materias, id) {
+    function atualizaMateriasTelaAdicionar(materias) {
         Materialize.Toast.removeAll();
-        console.log(materias);
+//        console.log(materias);
         $.ajax({
-            url: "AtualizaMateriaTelaAdicionar",
-            type: 'get',
-            data: {
-                materia1: materias[0],
-                materia2: materias[1],
-                materia3: materias[2],
-                materia4: materias[3],
-                materia5: materias[4],
-                materia6: materias[5],
-                materia7: materias[6],
-                idUsuario: id
-            },
+            url: "https://ifcommunity.herokuapp.com/matter/user",
+            type: 'post',
+            contentType: "application/json",
+            crossDomain: true,
+            data: JSON.stringify({
+                studentId: studentId,
+                matter1: materias[0],
+                matter2: materias[1],
+                matter3: materias[2],
+                matter4: materias[3],
+                matter5: materias[4],
+                matter6: materias[5],
+                matter7: materias[6]
+            }),
             beforeSend: function () {
                 // console.log("Atualizando as matérias");
             }
@@ -796,6 +808,7 @@ function atualizaMaterias() {
                     //    console.log("Materias atualizadas com sucesso!");
                 })
                 .fail(function (jqXHR, textStatus, resultado) {
+                    console.log(resultado)
                     if (jqXHR["status"] === 500) {
                         console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
                     } else if (jqXHR["status"] === 502) {
@@ -811,22 +824,24 @@ function atualizaMaterias() {
 
 //Função que desloga o usuário
 function deslogar() {
-    $.ajax({
-        url: "Deslogar",
-        type: 'get'
-    })
-            .done(function () {
-                window.location.href = "index.jsp";
-            })
-            .fail(function (jqXHR, status, data) {
-                if (jqXHR["status"] === 500) {
-                    console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
-                } else if (jqXHR["status"] === 502) {
-                    console.log("Erro 502, não foi possível estabelecer conexão!");
-                } else if (jqXHR["status"] === 404) {
-                    console.log("Erro 404, não foi encontrado o diretório solicitado!");
-                }
-            });
+    $.session.clear();
+    location.replace("index.html")
+//    $.ajax({
+//        url: "Deslogar",
+//        type: 'get'
+//    })
+//            .done(function () {
+//                window.location.href = "index.jsp";
+//            })
+//            .fail(function (jqXHR, status, data) {
+//                if (jqXHR["status"] === 500) {
+//                    console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
+//                } else if (jqXHR["status"] === 502) {
+//                    console.log("Erro 502, não foi possível estabelecer conexão!");
+//                } else if (jqXHR["status"] === 404) {
+//                    console.log("Erro 404, não foi encontrado o diretório solicitado!");
+//                }
+//            });
 }
 
 //Chama a função de deslogar quando clica dentro do item
