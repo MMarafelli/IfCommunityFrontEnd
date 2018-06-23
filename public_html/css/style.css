@@ -381,7 +381,7 @@ h4 {
 }
 
 #body-principal section.minhas-materias > ul.collapsible > li > div.collapsible-header > ul.container > li h4 {
-    max-height: 32px;
+    max-height: 35px;
     line-height: 1;
     background: #5586af!important;
     font-weight: 400;
@@ -416,7 +416,7 @@ h4 {
 
 #body-principal main > section.minhas-materias .setinha-indicadora:before {
     content: "\25BC"!important;
-    color: rgba(72, 106, 134, 0.8);
+    color: rgba(72, 106, 134, 0.86);
     line-height: 40px;
     webkit-transition: width 2s;
     -webkit-transition: width 2s;
@@ -544,7 +544,7 @@ h4 {
 }
 
 #body-principal .menu {
-    background: rgba(72, 106, 134, 0.8);
+    background: rgba(72, 106, 134, 0.86);
     height: 100%;
     width: 240px;
     position: fixed;
@@ -678,7 +678,7 @@ h4 {
         top: 0;
         max-width: 60px;
         min-width: 50px;
-        background-color: rgba(72, 106, 134, 0.8);
+        background-color: rgba(72, 106, 134, 0.86);
         text-decoration: none;
         text-align: center;
         border-bottom-right-radius: 3px;
@@ -763,7 +763,7 @@ h4 {
 }
 
 #imgChangeButton, #imgSaveButton, #imgCancelButton {
-    background-color: rgba(72, 106, 134, 0.8)!important;
+    background-color: rgba(72, 106, 134, 0.86)!important;
     padding: 0em 0em!important;
 }	
 
@@ -904,7 +904,7 @@ h4 {
 
 #body-principal .box-padrao h3,
 body-principal .box-padrao h4 {
-    background: rgba(72, 106, 134, 0.8);
+    background: rgba(72, 106, 134, 0.86);
     padding: .1em;
     font-weight: 300;
     text-align: center;
@@ -1174,8 +1174,12 @@ body-principal .box-padrao h4 {
 
 #body-principal #div-loading {
     display: none;
-    width: 50%!important;
     margin: 0 auto;
+    padding: 10px;
+}
+
+.progress {
+       padding: 3px; 
 }
 
 #body-principal #section-perfil #div-loading {
@@ -1252,7 +1256,7 @@ body-principal .box-padrao h4 {
 
 
 #body-principal .tabs .tab a:hover, .tabs .tab a.active{
-    color: rgba(72, 106, 134, 0.8)!important;
+    color: rgba(72, 106, 134, 0.86)!important;
 }
 
 .tabs .tab a.active {
@@ -1260,7 +1264,7 @@ body-principal .box-padrao h4 {
 }
 
 #body-principal .tabs .tab a {
-    color: rgba(72, 106, 134, 0.8);
+    color: rgba(72, 106, 134, 0.86);
 }
 
 #body-principal .tabs .indicator {

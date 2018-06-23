@@ -32,10 +32,15 @@ $(jQuery.parseJSON($.session._cookieCache.usuario)).each(function () {
     userId = this.userId;
     website = this.website;
 
-    var nomeParaDashBoard = name.split(" ");
+    var nomePerfilDashboard = name.split(" ");
+    if (nomePerfilDashboard.length >= 1) {
+        nomePerfilDashboard = nomePerfilDashboard[0] + " " + nomePerfilDashboard[1];
+    } else {
+        nomePerfilDashboard = nomePerfilDashboard[0];
+    }
 
-    $("#nome-usuario").text(name);
-    $(".nome-perfil-dashboard").val(nomeParaDashBoard[0] + " " + nomeParaDashBoard[1]);
+    $("#nome-usuario").text(nomePerfilDashboard);
+    $(".nome-perfil-dashboard").val(name);
     $(".telefone-perfil-dashboard").val(phone);
     $(".email-perfil-dashboard").val(mail);
     $(".matricula-perfil-dashboard").val(enrolledNumber);
@@ -46,7 +51,22 @@ $(jQuery.parseJSON($.session._cookieCache.usuario)).each(function () {
 $('.telefone-perfil-dashboard').mask('(00) 00009-0000');
 
 /*------------------------------------------------------------------------*/
+/* Cores responsivas do menu lateral */
 
+$("#body-principal > nav > div > ul > li").click(function () {
+//    console.log($(this).css("background-color"));
+    if ($(this).css("background-color") == "rgba(64, 196, 255, 0.5)") {
+//        console.log("verde");
+        $("#body-principal > nav > div > ul > li").css("background-color", "rgba(0, 0, 0, 0)");
+    } else {
+//        console.log("azul");
+        $("#body-principal > nav > div > ul > li").css("background-color", "rgba(0, 0, 0, 0)");
+        $(this).css("background-color", "rgba(64, 196, 255, 0.5)");
+    }
+//    console.log($(this).css("background-color"));
+});
+
+/*------------------------------------------------------------------------*/
 //Função que mostra o "carregando" na tela.
 function carregando() {
     $(".preloader-wrapper").show();
@@ -79,7 +99,26 @@ $('.perfil .collapsible-header').click(function () {
 
 
 /*-----------------------------------------------------------------------------*/
-/*    Na escolha da opção no menu substitui a pagina inicial      */
+/*    Na escolha do home substitui a pagina inicial pelo perfil      */
+
+$("#body-principal > nav > div > ul > li.icon-users").css("background-color", "rgba(64, 196, 255, 0.5)");
+
+$("#body-principal > div.content-header.valign-wrapper > h1").click(function () {
+    closeImgChangeButton();
+    $("main > section.minhas-materias").empty();
+    $('ul label li').removeClass('fundo-checked');
+    //remove a tela que está aparecendo
+    $("section").removeClass("section-aparece");
+    $('.minhas-materias-adicionadas').slideUp();
+    $('.aviso-minhas-materias').hide();
+    abreComBotaoCelular();
+    mapDeLinguagens.clear();
+    pegaIndicesAJAX(userId);
+    var classe = '.perfil';
+    qualApareceNaTela(classe);
+    $("#body-principal > nav > div > ul > li").css("background-color", "rgba(0, 0, 0, 0)");
+    $("#body-principal > nav > div > ul > li.icon-users").css("background-color", "rgba(64, 196, 255, 0.5)");
+});
 
 /*    Na escolha da opção no menu substitui a pagina inicial      */
 /*    Esses sinais chevron significam diretamente filhos, para que n pegue o sub-menu como função click tbm */
@@ -604,7 +643,6 @@ function adicionaPostagens(textoPostagem, autorPostagem, tituloPostagem, dataPos
 // Primeiro, do vetor com as matérias que ele já tem e os períodos delas.
 // O vetor das materias, ja temos, agora falta o dos períodos.
 
-
 function retornaMaterias() {
     $.ajax({
         url: "https://ifcommunity.herokuapp.com/matter",
@@ -618,7 +656,7 @@ function retornaMaterias() {
             .done(function (materiasJSON) {
 //                console.log(materiasJSON);
 
-//                $("#section-materias #div-loading").hide();
+                $("#section-materias #div-loading").hide();
                 periodoMateria = [];
 
                 $(".adicionar-materias div.box-padrao .row > ul.collapsible").empty();
@@ -730,6 +768,19 @@ function gerenciarMateriasConteudo() {
             }
         }
     });
+
+    // Troca cor dos collapsible headers de Gerenciar matérias
+    $("#section-materias > div.row > ul > li > div.collapsible-header").click(function () {
+        if ($(this).css("background-color") == "rgb(187, 222, 251)") {
+//            console.log("azul");
+            $("#section-materias > div.row > ul > li > div.collapsible-header").css("background-color", "#fff");
+        } else {
+//            console.log("branco");
+            $("#section-materias > div.row > ul > li > div.collapsible-header").css("background-color", "#fff");
+            $(this).css("background-color", "#bbdefb");
+        }
+//        console.log($(this).css("background-color"));
+    });
 }
 ;
 
@@ -787,10 +838,10 @@ function atualizaMaterias() {
         $.ajax({
             url: "https://ifcommunity.herokuapp.com/matter/user",
             type: 'post',
-            contentType: "application/json",
-            crossDomain: true,
+//            contentType: "application/json",
+//            crossDomain: true,
             data: JSON.stringify({
-                studentId: studentId,
+                studentId: userId,
                 matter1: materias[0],
                 matter2: materias[1],
                 matter3: materias[2],
@@ -872,7 +923,7 @@ function atualizaNomePerfil() {
     var nomePerfil = aluno[0];
 
     nomePerfil = nomePerfil.split(" ");
-    if (nomePerfil.length > 1) {
+    if (nomePerfil.length >= 1) {
         nomePerfil = nomePerfil[0] + " " + nomePerfil[1];
     } else {
         nomePerfil = nomePerfil[0];
@@ -885,10 +936,10 @@ function atualizaNomePerfil() {
 function atualizaPerfilAJAX(id, nome, telefone, email) {
     Materialize.Toast.removeAll();
 
-    console.log(id);
-    console.log(nome);
-    console.log(telefone);
-    console.log(email);
+//    console.log(id);
+//    console.log(nome);
+//    console.log(telefone);
+//    console.log(email);
 
     telefone = telefone.split("(");
     telefone = telefone[1].split(")");
@@ -1007,7 +1058,7 @@ $("#btn-submeter-postagem").click(function (evento) {
 
     var testaAssunto = testaPost(assunto);
     if (testaAssunto && linguagem != 'selecione a linguagem' && postagemTamanho >= 50 && (assuntoTamanho <= 20 && assuntoTamanho >= 5)) {
-        adicionaPostagemNoBanco(assunto, linguagem, conteudoDaPostagem, qualMateria, nomeDoUsuario);
+        adicionaPostagemNoBanco(assunto, linguagem, conteudoDaPostagem, qualMateria);
         $('#modal1').modal('close');
     } else {
         if (testaAssunto == false) {
@@ -1044,18 +1095,24 @@ function limpaCamposPostagem() {
     $('.paraCodigo').hide();
 }
 
-function adicionaPostagemNoBanco(assunto, linguagem, conteudoDaPostagem, qualMateria, nomeDoUsuario) {
+function adicionaPostagemNoBanco(assunto, linguagem, conteudoDaPostagem, qualMateria) {
+//    console.log(assunto);
+//    console.log(linguagem);
+//    console.log(conteudoDaPostagem);
+//    console.log(qualMateria);
+
     $.ajax({
-        url: "AdicionaPostagem",
-        type: 'get',
-        timeout: 8000,
-        data: {
-            assunto: assunto,
-            linguagem: linguagem,
-            conteudoDaPostagem: conteudoDaPostagem,
-            qualMateria: qualMateria,
-            nomeDoUsuario: nomeDoUsuario
-        },
+        url: "https://ifcommunity.herokuapp.com/post",
+        type: 'post',
+        contentType: "application/json",
+//        crossDomain: true,
+        data: JSON.stringify({
+            authorId: userId,
+            matterName: qualMateria,
+            title: assunto,
+            programmingLanguage: linguagem,
+            postText: conteudoDaPostagem
+        }),
         beforeSend: function () {
             carregando();
         }

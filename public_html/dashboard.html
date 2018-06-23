@@ -345,6 +345,11 @@
         <script src="js/croppie.js"></script>
         <!-- Import Login JS -->
         <script src="js/jquery.session.js"></script>
+        <script>
+           if(typeof($.session.get('usuario')) == "undefined") {
+               location.replace("index.html")
+           }
+        </script>
         <!-- Import Dashboard JS -->
         <script src="js/dashboard.js"></script>
     </body>
