@@ -25,7 +25,7 @@
             <a href="#" class="nav-toggle"></a> 
             <header class="avatar">
                 <div class="container">
-                    <img id="profileImg" class="my-image"  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKba5wosIGLONBfM6qjoFkd86HhgBpXa--kQVnID_rI8OyWMlA" /> 
+                    <img id="profileImg" class="my-image"  src="img/img-usuario.png" /> 
                     <!--preencher foto com js-->
                 </div>
                 <form name="imageUpload" id="imageUpload">
@@ -110,10 +110,19 @@
 
                         <hr id="linha-de-indice-perfil"/>
 
-                        <div class="wrapper1 col s12 col s12">
+                        <div class="wrapper1 col s12">
                             <ul class="collapsible">
                                 <li class="recupera-indices-usuario">
-                                    <div class="collapsible-header col s12"><div class="col s11"><i class="material-icons">pie_chart_outlined</i><span>Meus índices</span></div><span id="seta-indices" class="material-icons col s1 .seta-indice-antes"></span></div>
+                                    <div id="headerIndices" class="collapsible-header col s12 row">
+                                        <div class="col s11">
+                                            <i class="material-icons">pie_chart_outlined</i>
+                                            <span>Meus índices</span>
+                                        </div>
+                                        <span id="seta-indices" class="material-icons col s1 .seta-indice-antes"></span>
+                                        <div id="progressIndice" class="progress col s12">
+                                            <div class="indeterminate"></div>
+                                        </div>
+                                    </div>
                                     <div id="aviso" class="col s12">
                                         <p>A partir de suas atividades serão gerados dados sobre suas contribuições.</p>
                                     </div>
@@ -261,13 +270,15 @@
                         <i class="large material-icons">code</i>
                     </a>
                     <ul>
-                        <li><a href="#modal1" id="modal-de-escrever-codigo" class="btn-floating green lighten-2 waves-effect waves-light btn modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Adicionar código"><i class="material-icons">add</i></a></li>
+                        <li><a href="#modal-postagem" id="modal-de-escrever-codigo" class="btn-floating green lighten-2 waves-effect waves-light btn modal-trigger tooltipped" data-position="left" data-delay="50" data-tooltip="Adicionar código"><i class="material-icons">add</i></a></li>
                         <li><a href="#modal-buscar" class="btn-floating grey tooltipped modal-trigger" data-position="left" data-delay="50" data-tooltip="Buscar"><i class="material-icons">search</i></a></li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Modal Structure -->   
+            <!-- Modal de  Structure -->   
+
+            <!--Modal de busca de postagem-->
             <div id="modal-buscar" class="modal">
                 <div class="modal-content">
                     <h4>Buscar uma postagem</h4>
@@ -278,7 +289,8 @@
                 </div>
             </div>
 
-            <div id="modal1" class="modal modal-fixed-footer">
+            <!--Modal de postagem-->
+            <div id="modal-postagem" class="modal modal-fixed-footer">
                 <div class="browser">
                     <div class='btns'>
                         <div class="close modal-action modal-close"></div>
@@ -322,6 +334,54 @@
                 </form>
             </div>
 
+            <!--Modal de comentarios-->
+            <div id="modal-comentarios" class="modal modal-fixed-footer">
+                <div class="browser">
+                    <div class='btns'>
+                        <div class="close modal-action modal-close"></div>
+                    </div>
+                </div>
+
+                <div class="modal-head center-align">
+                    <p>Comentários</p>
+                    <div id="progressComentarios" class="progress">
+                        <div class="indeterminate"></div>
+                    </div>
+                </div>
+
+                <div class="divDosComentariosRealizados row col s12">
+
+                    <!--                    <div id=11 class="comentariosRealizadosPorUsuarios col s12">
+                                            <div id="nomeUsuarioComentario11" class="col s8">
+                                                Gabriel Guilherme</div>
+                                            <div id="dataComentario" class="col s4">
+                                                2018-06-24 14:51:37.0</div>
+                                            <div id="Comentario" class="textoComentariosRealizados col s12">
+                                                teste comentario via postman
+                                            </div>
+                                        </div>-->
+
+                </div>
+
+                <form id="formDoModalComentarios">
+                    <div id="footer-comentarios" class="modal-footer">
+                        <div class="row col s12 center-align">
+                            <p>Faça seu comentário</p>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <textarea id="textarea-comentarios" class="materialize-textarea"></textarea>
+                                <label for="textarea-comentarios">Textarea</label>
+                            </div>
+                        </div>
+
+                        <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat modal-close" id="btn-submeter-comentarios" name="action">Submeter</button>
+                    </div>
+                </form>
+            </div>
+
         </main>
 
 
@@ -343,14 +403,20 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js"></script>
         <!-- Import tratamento de imagens -->
         <script src="js/croppie.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
         <!-- Import Login JS -->
         <script src="js/jquery.session.js"></script>
         <script>
-           if(typeof($.session.get('usuario')) == "undefined") {
-               location.replace("index.html")
-           }
+            console.log($.session.get('usuario'));
+            console.log(typeof($.session.get('usuario')));
+            if ($.session.get('usuario') === undefined || typeof ($.session.get('usuario')) !== "undefined") {
+//                console.log("entrou aqui no sem sessão");
+                location.replace("index.html");
+            } 
         </script>
         <!-- Import Dashboard JS -->
+        <script src="js/comentarios.js"></script>
+        <script src="js/uploadFoto.js"></script>
         <script src="js/dashboard.js"></script>
     </body>
 

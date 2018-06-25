@@ -26,9 +26,12 @@
                 <div class="col s1"></div>
                 <div class="col s5">
                     <center>
-
+                        <div id="progressLogin" class="progress col s11">
+                            <div class="indeterminate"></div>
+                        </div>
                         <!-- FORM LOGIN -->
                         <form name="form-login" class="col s11 z-depth-3 grey lighten-4 div-form" id="form-login">
+
                             <div class="row">
                                 <h3 class="indigo-text">IFCommunity</h3>
                                 <div class="input-field col s12" id="div-erro-cadastro-span">
@@ -192,8 +195,16 @@
         <!-- Import Login JS -->
         <script src="js/jquery.session.js"></script>
         <script>
-            if (typeof ($.session.get('usuario')) != "undefined") {
-                location.replace("dashboard.html")
+//            console.log($.session.get('usuario'));
+//            console.log(typeof ($.session.get('usuario')));
+            if ($.session.get('usuario') !== undefined || typeof ($.session.get('usuario')) !== "undefined") {
+                if ($.session.get('usuario') == 'undefined') {
+//                    console.log("entrou aqui no sem sessão index");
+//                    location.replace("index.html");
+                } else {
+//                    console.log("entrou aqui no index com sessão");
+                    location.replace("dashboard.html");
+                }
             }
         </script>
         <!-- Import Login JS -->

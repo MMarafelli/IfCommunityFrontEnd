@@ -1,3 +1,4 @@
+//$(document).ready(function () {
 var administratorId;
 var enrolledNumber;
 var mail;
@@ -6,6 +7,7 @@ var password;
 var period;
 var permission;
 var phone;
+var photoHash;
 var studentId;
 var teacherId;
 var typeUser;
@@ -13,9 +15,9 @@ var user;
 var userId;
 var website;
 
-//console.log($.session._cookieCache.usuario);
+//console.log($.session.get('usuario'));
 
-$(jQuery.parseJSON($.session._cookieCache.usuario)).each(function () {
+$(jQuery.parseJSON($.session.get('usuario'))).each(function () {
 
     administratorId = this.administratorId;
     enrolledNumber = this.enrolledNumber;
@@ -25,6 +27,7 @@ $(jQuery.parseJSON($.session._cookieCache.usuario)).each(function () {
     period = this.period;
     permission = this.permission;
     phone = this.phone;
+    photoHash = this.photoHash;
     studentId = this.studentId;
     teacherId = this.teacherId;
     typeUser = this.typeUser;
@@ -40,11 +43,13 @@ $(jQuery.parseJSON($.session._cookieCache.usuario)).each(function () {
     }
 
     $("#nome-usuario").text(nomePerfilDashboard);
+    $('.my-image').attr('src', photoHash);
     $(".nome-perfil-dashboard").val(name);
     $(".telefone-perfil-dashboard").val(phone);
     $(".email-perfil-dashboard").val(mail);
     $(".matricula-perfil-dashboard").val(enrolledNumber);
 });
+
 /*-----------------------------------------------------------------------------*/
 /* global Materialize, aluno */
 
@@ -55,9 +60,9 @@ $('.telefone-perfil-dashboard').mask('(00) 00009-0000');
 
 $("#body-principal > nav > div > ul > li").click(function () {
 //    console.log($(this).css("background-color"));
+
     if ($(this).css("background-color") == "rgba(64, 196, 255, 0.5)") {
-//        console.log("verde");
-        $("#body-principal > nav > div > ul > li").css("background-color", "rgba(0, 0, 0, 0)");
+
     } else {
 //        console.log("azul");
         $("#body-principal > nav > div > ul > li").css("background-color", "rgba(0, 0, 0, 0)");
@@ -86,10 +91,9 @@ var flagOpenIndices = true;
 $('.perfil .collapsible-header').click(function () {
     mapDeLinguagens.clear();
     $('section').scrollTo('.wrapper1');
-    var idGlobal = $('#id-usuario').html();
     if (flagOpenIndices === true) {
         $('.pie-chart__legend').empty();
-        pegaIndicesAJAX(idGlobal);
+        pegaIndicesAJAX(userId);
         flagOpenIndices = false;
     } else {
         $('.pie-chart__legend').empty();
@@ -113,7 +117,7 @@ $("#body-principal > div.content-header.valign-wrapper > h1").click(function () 
     $('.aviso-minhas-materias').hide();
     abreComBotaoCelular();
     mapDeLinguagens.clear();
-    pegaIndicesAJAX(userId);
+//    pegaIndicesAJAX(userId);
     var classe = '.perfil';
     qualApareceNaTela(classe);
     $("#body-principal > nav > div > ul > li").css("background-color", "rgba(0, 0, 0, 0)");
@@ -123,6 +127,7 @@ $("#body-principal > div.content-header.valign-wrapper > h1").click(function () 
 /*    Na escolha da opção no menu substitui a pagina inicial      */
 /*    Esses sinais chevron significam diretamente filhos, para que n pegue o sub-menu como função click tbm */
 $("ul.para-scroll > li").click(function () {
+
     closeImgChangeButton();
     $("main > section.minhas-materias").empty();
     $('ul label li').removeClass('fundo-checked');
@@ -141,9 +146,8 @@ $("ul.para-scroll > li").click(function () {
             retornaMaterias();
         } else if (textoDoClique === "Perfil") {
             $('.pie-chart__legend').empty();
-            var idGlobal = $('#id-usuario').html();
             mapDeLinguagens.clear();
-            pegaIndicesAJAX(idGlobal);
+//            pegaIndicesAJAX(userId);
         }
 
 
@@ -337,13 +341,22 @@ function apareceBotaoAbrirModal(TextoValidacao, StringQueNaoEscondemOBotaoDePubl
 
 // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
 
-$('#modal1').modal({
+$('#modal-postagem').modal({
     dismissible: true, // Modal can be dismissed by clicking outside of the modal
     opacity: .8, // Opacity of modal background
     inDuration: 400, // Transition in duration
     outDuration: 250, // Transition out duration
     startingTop: '90%', // Starting top style attribute
     endingTop: '15%' // Ending top style attribute
+});
+
+$('#modal-comentarios').modal({
+    dismissible: true, // Modal can be dismissed by clicking outside of the modal
+    opacity: .8, // Opacity of modal background
+    inDuration: 400, // Transition in duration
+    outDuration: 250, // Transition out duration
+    startingTop: '90%', // Starting top style attribute
+    endingTop: '5%' // Ending top style attribute
 });
 
 $('#modal-buscar').modal({
@@ -400,6 +413,7 @@ editor.session.setMode("ace/mode/javascript");
 editor.setShowPrintMargin(false);
 
 function qualLinguagem(text) {
+    text = text.toLowerCase();
     if (text == 'texto') {
         text = 'text';
     }
@@ -411,6 +425,7 @@ function qualLinguagem(text) {
 }
 
 function qualLinguagemParaPostagem(text, IDPostagem) {
+    text = text.toLowerCase();
     // precisa mudar o modo de acordo com o modo que retornar do banco.
     if (text == 'texto') {
         text = 'text';
@@ -482,9 +497,18 @@ function pegaPostagensDaMateriaSelecionada() {
 function pegaPostagens(materia) {
     Materialize.Toast.removeAll();
 
+    // Por enquanto 
+    var lastPost = ""
+
     $.ajax({
-        url: "https://ifcommunity.herokuapp.com/post?name=" + materia + "&lastPost=",
+        url: "https://ifcommunity.herokuapp.com/post/get",
         type: 'get',
+        contentType: "application/json",
+        crossDomain: true,
+        data: {
+            name: materia,
+            lastPost: lastPost
+        },
         beforeSend: function () {
             carregando();
         }
@@ -500,6 +524,9 @@ function pegaPostagens(materia) {
                 montaPostagens(postagens);
             })
             .fail(function (jqXHR, textStatus, postagem) {
+
+//                console.log(jqXHR);
+
                 Materialize.toast('Erro ao recuperar postagens, contate um administrador!', 6000, 'red');
                 $(".preloader-wrapper").hide();
                 if (jqXHR["status"] === 500) {
@@ -545,6 +572,7 @@ function montaPostagens(postagens) {
     }
 
     trocaMaxMinBoxPostagens();
+    habilitaClickParaAbrirComentarios();
 }
 
 //Função que adiciona a estrutura de postagem
@@ -580,12 +608,15 @@ function adicionaPostagens(textoPostagem, autorPostagem, tituloPostagem, dataPos
     var criaPSeta = document.createElement("p");
     var criaDivBody = document.createElement("div");
     var criaPreBody = document.createElement("pre");
-    var criaDivBotões = document.createElement("div");
+    var criaDivBotoesComentarios = document.createElement("div");
+    var criaDivChamaComentarios = document.createElement("div");
+    var criaDivBotoesLikeDeslike = document.createElement("div");
     var criaALike = document.createElement("a");
     var criaILike = document.createElement("i");
     var criaADislike = document.createElement("a");
     var criaIDislike = document.createElement("i");
     var criaPDataPostagem = document.createElement("p");
+
     criaDivHead.setAttribute("class", "collapsible-header");
     criaH4Titulo.setAttribute("class", "center");
     criaH4Titulo.innerHTML = tituloPostagem;
@@ -597,15 +628,18 @@ function adicionaPostagens(textoPostagem, autorPostagem, tituloPostagem, dataPos
     criaPreBody.setAttribute("id", "editorLeitura" + IDPostagem);
     criaPreBody.setAttribute("class", "paraCodigoPostagens");
     criaPreBody.innerHTML = textoPostagem;
-    criaDivBotões.setAttribute("class", "botoes-das-postagens right-align");
+    criaDivChamaComentarios.innerHTML = "Comentários";
+    criaDivChamaComentarios.setAttribute("class", "center-align col s9 onClikOpenComents");
+    criaDivBotoesLikeDeslike.setAttribute("class", "right-align col s3");
+    criaDivBotoesComentarios.setAttribute("class", "botoes-das-postagens col s12 row");
     criaALike.setAttribute("class", "waves-effect waves-light btn right-align botao-curtida");
     criaILike.setAttribute("class", "material-icons left");
     criaILike.innerHTML = "thumb_up";
-    criaDivBotões.setAttribute("class", "botoes-das-postagens right-align");
+//    criaDivBotoesComentarios.setAttribute("class", "botoes-das-postagens right-align col s3");
     criaADislike.setAttribute("class", "waves-effect waves-light btn right-align botao-curtida");
     criaIDislike.setAttribute("class", "material-icons left");
     criaIDislike.innerHTML = "thumb_down";
-    criaDivBotões.setAttribute("id", IDPostagem);
+    criaDivBotoesComentarios.setAttribute("id", IDPostagem);
     criaUl.setAttribute("class", "collapsible content-topic z-depth-2 container row");
     criaUl.setAttribute('data-collapsible', "accordion");
     criaLiBrowse.innerHTML = "<div class='browser'><div class='btns'><div class='max'></div></div></div>";
@@ -621,9 +655,11 @@ function adicionaPostagens(textoPostagem, autorPostagem, tituloPostagem, dataPos
     criaDivBody.append(criaPreBody);
     criaALike.append(criaILike);
     criaADislike.append(criaIDislike);
-    criaDivBotões.append(criaALike);
-    criaDivBotões.append(criaADislike);
-    criaDivBody.append(criaDivBotões);
+    criaDivBotoesComentarios.append(criaDivChamaComentarios);
+    criaDivBotoesLikeDeslike.append(criaALike);
+    criaDivBotoesLikeDeslike.append(criaADislike);
+    criaDivBotoesComentarios.append(criaDivBotoesLikeDeslike);
+    criaDivBody.append(criaDivBotoesComentarios);
     criaLi.setAttribute("id", IDPostagem);
     criaLi.append(criaDivHead);
     criaLi.append(criaDivBody);
@@ -771,13 +807,13 @@ function gerenciarMateriasConteudo() {
 
     // Troca cor dos collapsible headers de Gerenciar matérias
     $("#section-materias > div.row > ul > li > div.collapsible-header").click(function () {
-        if ($(this).css("background-color") == "rgb(187, 222, 251)") {
+        if ($(this).css("background-color") == "rgb(238, 238, 238)") {
 //            console.log("azul");
             $("#section-materias > div.row > ul > li > div.collapsible-header").css("background-color", "#fff");
         } else {
 //            console.log("branco");
             $("#section-materias > div.row > ul > li > div.collapsible-header").css("background-color", "#fff");
-            $(this).css("background-color", "#bbdefb");
+            $(this).css("background-color", "rgb(238, 238, 238)");
         }
 //        console.log($(this).css("background-color"));
     });
@@ -875,8 +911,11 @@ function atualizaMaterias() {
 
 //Função que desloga o usuário
 function deslogar() {
-    $.session.clear();
-    location.replace("index.html")
+    $.when($.session.clear()).then(function () {
+        location.replace("index.html");
+    });
+//    $.session.clear();
+//    location.replace("index.html")
 //    $.ajax({
 //        url: "Deslogar",
 //        type: 'get'
@@ -1059,7 +1098,7 @@ $("#btn-submeter-postagem").click(function (evento) {
     var testaAssunto = testaPost(assunto);
     if (testaAssunto && linguagem != 'selecione a linguagem' && postagemTamanho >= 50 && (assuntoTamanho <= 20 && assuntoTamanho >= 5)) {
         adicionaPostagemNoBanco(assunto, linguagem, conteudoDaPostagem, qualMateria);
-        $('#modal1').modal('close');
+        $('#modal-postagem').modal('close');
     } else {
         if (testaAssunto == false) {
             Materialize.toast('Preencha o assunto da postagem corretamente', 6000, 'red');
@@ -1102,7 +1141,7 @@ function adicionaPostagemNoBanco(assunto, linguagem, conteudoDaPostagem, qualMat
 //    console.log(qualMateria);
 
     $.ajax({
-        url: "https://ifcommunity.herokuapp.com/post",
+        url: "https://ifcommunity.herokuapp.com/post/make",
         type: 'post',
         contentType: "application/json",
 //        crossDomain: true,
@@ -1139,236 +1178,23 @@ function adicionaPostagemNoBanco(assunto, linguagem, conteudoDaPostagem, qualMat
 // Página de ajuda
 
 $('ul.tabs').tabs();
-/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
-// Tratamento de imagem.
-var numFiles = 0;
-var ImageURL = '';
-var landscape = $('.my-image');
-
-$('.avatar').hover(function (e) {
-    e.preventDefault();
-    if (numFiles === 0 && ImageURL === '') {
-        $('#imgChangeButton').show();
-        $('#imgChangeButton').css('visibility', 'visible');
-        $('#btn-save-cncl').hide();
-    }
-});
-
-$('#profileImg').click(function (e) {
-    e.preventDefault();
-    if (numFiles === 0 && ImageURL === '') {
-        $('#imgChangeButton').show();
-        $('#imgChangeButton').css('visibility', 'visible');
-        $('#btn-save-cncl').hide();
-    }
-});
-
-$('#fileUpload').click(function (event) {
-    var target = event.target || event.srcElement;
-    $('#imgChangeButton').text("Escolha a imagem");
-    if (target.value.length === 0) {
-    } else {
-        numFiles = target.files.length;
-    }
-});
-
-$('#fileUpload').change(function (event) {
-    var target = event.target || event.srcElement;
-    if (target.value.length === 0) {
-        if (numFiles === target.files.length) {
-        }
-    } else {
-        var ext = this.value.match(/\.([^\.]+)$/)[1];
-        switch (ext) {
-            case 'jpg':
-            case 'jpeg':
-            case 'bmp':
-            case 'png':
-                imgFormatAccepted(ext);
-                break;
-            default:
-                Materialize.toast('Formato ' + ext + ' de imagem inválido!', 6000, 'red');
-                this.value = '';
-        }
-    }
-
-    function imgFormatAccepted(ext) {
-        numFiles = target.files.length;
-
-        // Trata o nome que a imagem será salva.
-        var userName = $('#login-usuario').html();
-        var imgName = userName + '.' + ext;
-        var imgAnterior = $('#profileImg').attr('src');
-        var fotoAtual = window.URL.createObjectURL(target.files[0]);
-
-        // Muda imagem do perfil para preview
-        landscape.attr('src', fotoAtual);
-        $('.cr-boundary> img').attr('src', landscape.src);
-
-        createCroppie(ext);
-
-        // Mostra os Save/Cancel e o Zoom Slider;
-        $('#imgChangeButton').hide();
-        $('.cr-slider-wrap').show(500);
-        $('#btn-save-cncl').show();
-
-        // Limpa evendo do click pra não rodar mais vezes.
-        $('#imgSaveButton').unbind('click');
-        $('#imgSaveButton').click(function () {
-            closeImgChangeButton();
-            $('div.cr-slider-wrap').hide(500, function () {
-                $('.avatar > .container').empty().append("<img id='profileImg' class='my-image'/>");
-                $('.my-image').attr('src', ImageURL);
-                landscape.croppie('destroy');
-                landscape = $('.my-image');
-                ImageURL = '';
-            });
-
-            // Split the base64 string in data and contentType
-            var block = ImageURL.split(";");
-            // Get the content type of the image
-            var contentType = block[0].split(":")[1];// In this case "image/gif"
-            // get the real base64 content of the file
-            var realData = block[1].split(",")[1];// In this case "R0lGODlhPQBEAPeoAJosM...."
-            // Convert it to a blob to upload
-            var blob = b64toBlob(realData, contentType);
-            var fotoProBanco = new File([blob], imgName);
-            // Create a FormData and append the file with "image" as parameter name
-            var formDataToUpload = new FormData(fotoProBanco);
-            formDataToUpload.append("image", fotoProBanco);
-            // Envia a nova imagem para o banco.
-            uploadImg(formDataToUpload);
-            //Limpa o input.
-            $('#fileUpload').val('');
-            numFiles = 0;
-        });
-
-        $("#imgCancelButton").unbind('click');
-        $('#imgCancelButton').click(function () {
-            closeImgChangeButton();
-            $('div.cr-slider-wrap').hide(500, function () {
-                // Muda imagem do perfil para a antiga.
-                $('.avatar > .container').empty().append("<img id='profileImg' class='my-image'/>");
-                $('.my-image').attr('src', imgAnterior);
-                landscape.croppie('destroy');
-                landscape = $('.my-image');
-                $('#fileUpload').val('');
-                numFiles = 0;
-                ImageURL = '';
-            });
-        });
-    }
-});
-
-// Fechar botão de upar img;
-$('.site-content').hover(function (event) {
-    event.preventDefault();
-    if (numFiles === 0 && ImageURL === '') {
-        closeImgChangeButton();
-    }
-});
-
-// Fechar botão de upar img;
-$('html').click(function (e) {
-    if (!$(e.target).hasClass('.avatar')) {
-        if (numFiles === 0 && ImageURL === '') {
-            closeImgChangeButton();
-        }
-    }
-});
-
-function closeImgChangeButton() {
-    $('#imgChangeButton').show();
-    $('#btn-save-cncl').hide();
-    $('#imgChangeButton').css('visibility', 'hidden');
-}
-
-function uploadImg(form) {
-    $.ajax({
-        url: 'UpdateImagem', // Url do lado server que vai receber o arquivo
-        data: form,
-        processData: false,
-        contentType: false,
-        cache: false,
-        timeout: 12000,
-        type: 'POST',
-        beforeSend: function () {
-            carregando();
-        }
-    })
-            .done(function () {
-                $(".preloader-wrapper").hide();
-                Materialize.toast('Foto enviada com sucesso!', 6000, 'green');
-            })
-            .fail(function (jqXHR) {
-                Materialize.toast('Erro ao adicionar foto, contate um administrador!', 6000, 'red');
-                $(".preloader-wrapper").hide();
-                if (jqXHR["status"] === 500) {
-                    console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
-                } else if (jqXHR["status"] === 502) {
-                    console.log("Erro 502, não foi possível estabelecer conexão!");
-                } else if (jqXHR["status"] === 404) {
-                    console.log("Erro 404, não foi encontrado o diretório solicitado!");
-                }
-            });
-}
-
-function createCroppie(extention) {
-    landscape.croppie({
-        enforceBoundary: false,
-        viewport: {//visible part of the cropped img
-            width: 200,
-            height: 200
-        },
-        boundary: {
-            width: 200,
-            height: 200
-        },
-        update: function (croppie) {
-            // console.log('croppie updated avatar: ', croppie);
-            landscape.croppie('result', {
-                circle: false,
-                format: extention,
-                quality: 1,
-                type: 'canvas'
-            }).then(function (resp) {
-                // console.log("result = ", resp);
-                // landscapeLiveResultbox.attr('src', resp);
-                ImageURL = resp;
-            });
-        }
-    });
-}
-;
-
-
-function b64toBlob(b64Data, contentType, sliceSize) {
-    contentType = contentType || '';
-    sliceSize = sliceSize || 512;
-
-    var byteCharacters = atob(b64Data);
-    var byteArrays = [];
-
-    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-        var byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        var byteArray = new Uint8Array(byteNumbers);
-
-        byteArrays.push(byteArray);
-    }
-
-    var blob = new Blob(byteArrays, {type: contentType});
-    return blob;
-}
-;
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 // Recupera indices
+
+// Troca cor no click de recuperar indices
+$("#section-perfil > div > div > ul > li > div.collapsible-header.col.s12").click(function () {
+//    console.log($(this).css("background-color"));
+    if ($(this).css("background-color") == "rgb(255, 255, 255)") {
+//        console.log("branco");
+        $(this).css("background-color", "#eeeeee");
+    } else {
+//        console.log("azul");
+        $(this).css("background-color", "rgb(255, 255, 255)");
+    }
+//    console.log($(this).css("background-color"));
+});
+
 
 var mapDeLinguagens = new Map();
 var flagLing = false;
@@ -1376,27 +1202,25 @@ var flagRep = false;
 var flagComPost = false;
 
 
-function pegaIndicesAJAX(id) {
+function pegaIndicesAJAX(userId) {
     Materialize.Toast.removeAll();
 
     $.ajax({
-        url: "RecuperarIndices",
+        url: "https://ifcommunity.herokuapp.com/user/charts?userId=" + userId,
         type: 'get',
-        timeout: 8000,
-        data: {
-            id: id
-        },
+//        data: {
+//            id: id
+//        },
         beforeSend: function () {
-            carregando();
+            $("#progressIndice").show();
         }
     })
             .done(function (resultados) {
-                $(".preloader-wrapper").hide();
+//                console.log(resultados);
+                $("#progressIndice").hide();
                 var resultadoIndices = [];
 
-                for (var i = 0; i < resultados.length; i++) {
-                    resultadoIndices.push(resultados[i]);
-                }
+                resultadoIndices = resultados;
 
                 preencheGraficos(resultadoIndices);
 
@@ -1417,47 +1241,58 @@ function pegaIndicesAJAX(id) {
 function preencheGraficos(resultadoIndices) {
     $('.pieID--linguagens .pie-chart__legend').empty();
 
-    for (var x = 0; x < resultadoIndices.length; x++) {
-        var postouQualLinguagem = resultadoIndices[x]["postouQualLinguagem"];
-        var postouQuantos = resultadoIndices[x]["postouQuantos"];
-        var quantosDeslikes = resultadoIndices[x]["quantosDeslikes"];
-        var quantosLikes = resultadoIndices[x]["quantosLikes"];
-        var reputacao = resultadoIndices[x]["reputacao"];
-        var postouQualMateria = resultadoIndices[x]["postouQualMateria"];
-        montaDadosGrafico(postouQualLinguagem, postouQuantos, quantosLikes, quantosDeslikes, reputacao, postouQualMateria);
-    }
-    montaGraficosTela();
+//    console.log("============");
+//    console.log(resultadoIndices);
+//    console.log("============");
+
+    var qtdLikes = 0;
+    var qtdDeslikes = 0;
+
+    $(jQuery.parseJSON(JSON.stringify(resultadoIndices))).each(function () {
+        var programmingLanguage = this.programmingLanguage;
+        var countManyPostsTime = this.countManyPostsTime;
+        var matterName = this.matterName;
+        var likes = this.likes;
+        var deslikes = this.deslikes;
+
+        qtdLikes += likes;
+        qtdDeslikes += deslikes;
+        montaDadosGrafico(programmingLanguage, countManyPostsTime, likes, deslikes, matterName);
+    });
+
+    montaGraficosTela(qtdLikes, qtdDeslikes);
     createPieCharts();
 }
 
-function montaDadosGrafico(postouQualLinguagem, postouQuantos, quantosLikes, quantosDeslikes, reputacao, postouQualMateria) {
+function montaDadosGrafico(programmingLanguage, countManyPostsTime, likes, deslikes, matterName) {
 
-    if (postouQualLinguagem === "none") {
+    if (programmingLanguage === "none") {
         $('.pieID--linguagens').hide();
         flagLing = false;
-    } else {
+    } else if (programmingLanguage !== null) {
         flagLing = true;
-        postouQualLinguagem = postouQualLinguagem.split(",");
-        if (mapDeLinguagens.has(postouQualLinguagem[0])) {
-            var quantos = mapDeLinguagens.get(postouQualLinguagem[0]);
-            mapDeLinguagens.delete(postouQualLinguagem[0]);
-            quantos = parseInt(quantos) + parseInt(postouQualLinguagem[1]);
-            mapDeLinguagens.set(postouQualLinguagem[0], quantos);
+        if (mapDeLinguagens.has(programmingLanguage)) {
+            var quantos = mapDeLinguagens.get(programmingLanguage);
+            mapDeLinguagens.delete(programmingLanguage);
+            quantos = parseInt(quantos) + parseInt(countManyPostsTime);
+            mapDeLinguagens.set(programmingLanguage, quantos);
         } else {
-            mapDeLinguagens.set(postouQualLinguagem[0], postouQualLinguagem[1]);
+            mapDeLinguagens.set(programmingLanguage, countManyPostsTime);
         }
     }
 }
 ;
 
-function montaGraficosTela() {
+function montaGraficosTela(qtdLikes, qtdDeslikes) {
     // Soma de todas as postagens
     var quantasPostagens = 0;
     var quantosComentários = 0;
-    var likes = 10;
-    var deslikes = 0;
+
+//    console.log(mapDeLinguagens);
 
     mapDeLinguagens.forEach(function (item, key) {
+//        console.log(item);
+//        console.log(key);
         quantasPostagens = parseInt(quantasPostagens) + parseInt(item);
         $('.pieID--linguagens .pie-chart__legend').append("<li><em>" + key.toString() + "</em><span>" + item.toString() + "</span></li>");
         $('.pieID--linguagens').show();
@@ -1473,14 +1308,14 @@ function montaGraficosTela() {
         $('.pieID--micro-contribuicoes .pie-chart__legend').append('<li><em>Comentários</em><span>0</span></li>');
     }
 
-    if (likes === 0 && deslikes === 0) {
+    if (qtdLikes === 0 && qtdDeslikes === 0) {
         $('.pieID--reputacao').hide();
         var flagRep = false;
     } else {
         var flagRep = true;
         $('.pieID--reputacao').show();
-        $('.pieID--reputacao .pie-chart__legend').append('<li><em>Likes</em><span>' + likes + '</span></li>');
-        $('.pieID--reputacao .pie-chart__legend').append('<li><em>Deslikes</em><span>' + deslikes + '</span></li>');
+        $('.pieID--reputacao .pie-chart__legend').append('<li><em>Likes</em><span>' + qtdLikes + '</span></li>');
+        $('.pieID--reputacao .pie-chart__legend').append('<li><em>Deslikes</em><span>' + qtdDeslikes + '</span></li>');
     }
 
     if (flagRep === false && flagComPost === false && flagLing === false) {
@@ -1581,3 +1416,5 @@ function createPieCharts() {
     createPie('.pieID--reputacao');
     createPie('.pieID--linguagens');
 }
+
+//});

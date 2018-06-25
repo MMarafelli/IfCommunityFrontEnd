@@ -7,16 +7,16 @@ function mascarasDosInputs() {
 //Função para exibir animações nos formulários
 function trocaTela(botao, formularioOut, formularioIn, formularioIn2) {
     $(botao).click(
-        function (e) {
-            e.preventDefault();
-            $(formularioOut).fadeOut(300);
-            setTimeout(function () {
+            function (e) {
+                e.preventDefault();
+                $(formularioOut).fadeOut(300);
+                setTimeout(function () {
                     $(formularioIn).fadeIn(300);
                     $(formularioIn2).fadeIn(300);
                 },
-                300
-            );
-        }
+                        300
+                        );
+            }
     );
 }
 
@@ -112,9 +112,9 @@ function verificaCPF(span) {
     soma2 = (((soma2 + (2 * soma1)) * 10) % 11);
 
     if (cpf === "11111111111" || cpf === "22222222222" || cpf ===
-        "33333333333" || cpf === "44444444444" || cpf === "55555555555" || cpf ===
-        "66666666666" || cpf === "77777777777" || cpf === "88888888888" || cpf ===
-        "99999999999" || cpf === "00000000000") {
+            "33333333333" || cpf === "44444444444" || cpf === "55555555555" || cpf ===
+            "66666666666" || cpf === "77777777777" || cpf === "88888888888" || cpf ===
+            "99999999999" || cpf === "00000000000") {
         var digitoGerado = null;
     } else {
         var digitoGerado = (soma1 * 10) + soma2;
@@ -164,9 +164,9 @@ function validacaoFormulario(campo, span, regex, mensagem) {
             }
 
             if (/^[a-záàâãéèêíïóôõöúçñ]{3,}\s[a-záàâãéèêíïóôõöúçñ\s]+$/i.test($("#nome").val())
-                && /^\(0?[1-9]{2}\)\s9?[0-9]{4}\-[0-9]{4}$/.test($("#telefone").val())
-                && /^[0-9]{11}-[1-9]{1,}$/.test($("#matricula").val())
-                && verificaCPF()) {
+                    && /^\(0?[1-9]{2}\)\s9?[0-9]{4}\-[0-9]{4}$/.test($("#telefone").val())
+                    && /^[0-9]{11}-[1-9]{1,}$/.test($("#matricula").val())
+                    && verificaCPF()) {
                 $("#btn-cadastrar-proximo").removeClass("disabled");
             } else {
                 $("#btn-cadastrar-proximo").addClass("disabled");
@@ -223,21 +223,34 @@ $("#btn-login").click(function () {
         data: JSON.stringify({
             "user": login,
             "password": senha
-        })
+        }),
+        beforeSend: function () {
+            $("#progressLogin").css('visibility', 'visible');
+        }
     })
-        .done(function (usuario) {
-            $.session.set("usuario", JSON.stringify(usuario));
-            location.replace("dashboard.html")
-        })
-        .fail(function (jqXHR, textStatus, materia) {
-            if (jqXHR["status"] === 500) {
-                console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
-            } else if (jqXHR["status"] === 502) {
-                console.log("Erro 502, não foi possível estabelecer conexão!");
-            } else if (jqXHR["status"] === 404) {
-                console.log("Erro 404, não foi encontrado o diretório solicitado!");
-            }
-        });
+            .done(function (usuario) {
+                $("#progressLogin").css('visibility', 'hidden');
+                $.session.set("usuario", JSON.stringify(usuario));
+//
+//                console.log($.session.get("usuario"));
+
+                if ($.session.get('usuario') === 'undefined' || typeof ($.session.get('usuario')) === "undefined") {
+//                    console.log("undefined")
+//                    Não faz nada se n tiver sessão;
+                } else {
+//                    console.log("tem sessão")
+                    location.replace("dashboard.html");
+                }
+            })
+            .fail(function (jqXHR, textStatus, materia) {
+                if (jqXHR["status"] === 500) {
+                    console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
+                } else if (jqXHR["status"] === 502) {
+                    console.log("Erro 502, não foi possível estabelecer conexão!");
+                } else if (jqXHR["status"] === 404) {
+                    console.log("Erro 404, não foi encontrado o diretório solicitado!");
+                }
+            });
 })
 
 

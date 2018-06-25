@@ -104,6 +104,11 @@ body {
     overflow: hidden;
 }
 
+#body-login #progressLogin {
+    visibility: hidden;
+    height: 7px;
+}
+
 #body-login h3 {
     line-height: 50%;
     text-transform: uppercase;
@@ -416,7 +421,7 @@ h4 {
 
 #body-principal main > section.minhas-materias .setinha-indicadora:before {
     content: "\25BC"!important;
-    color: rgba(72, 106, 134, 0.86);
+    color: rgba(72, 106, 134, 0.95);
     line-height: 40px;
     webkit-transition: width 2s;
     -webkit-transition: width 2s;
@@ -544,7 +549,7 @@ h4 {
 }
 
 #body-principal .menu {
-    background: rgba(72, 106, 134, 0.86);
+    background: rgba(72, 106, 134, 0.95);
     height: 100%;
     width: 240px;
     position: fixed;
@@ -556,8 +561,8 @@ h4 {
     outline: none;
     -webkit-box-shadow: .5vmin 0 0 rgba(0, 0, 0, .30);
     box-shadow: .5vmin 0 0 rgba(0, 0, 0, .30);
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
+/*    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);*/
 }
 
 #body-principal .menu .avatar {
@@ -678,12 +683,12 @@ h4 {
         top: 0;
         max-width: 60px;
         min-width: 50px;
-        background-color: rgba(72, 106, 134, 0.86);
+        background-color: rgba(72, 106, 134, 0.95);
         text-decoration: none;
         text-align: center;
         border-bottom-right-radius: 3px;
         -webkit-box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1);
-        box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1);
+        box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1); 
     }
     #body-principal .nav-toggle:before {
         content: "\2192";
@@ -763,7 +768,7 @@ h4 {
 }
 
 #imgChangeButton, #imgSaveButton, #imgCancelButton {
-    background-color: rgba(72, 106, 134, 0.86)!important;
+    background-color: rgba(72, 106, 134, 0.95)!important;
     padding: 0em 0em!important;
 }	
 
@@ -904,7 +909,7 @@ h4 {
 
 #body-principal .box-padrao h3,
 body-principal .box-padrao h4 {
-    background: rgba(72, 106, 134, 0.86);
+    background: rgba(72, 106, 134, 0.95);
     padding: .1em;
     font-weight: 300;
     text-align: center;
@@ -940,7 +945,7 @@ body-principal .box-padrao h4 {
 #body-principal section.minhas-materias > ul.collapsible > li > div.collapsible-header,
 #body-principal section.minhas-materias > ul.collapsible > li > div.collapsible-header > ul.container,
 #body-principal div.collapsible-header > ul > li> div > div.title-bar,
-#body-principal #modal1 {
+#body-principal #modal-postagem {
     border-radius: 8px 8px 8px 8px!important;
 }
 
@@ -1006,7 +1011,7 @@ body-principal .box-padrao h4 {
 
 #body-principal .content-topic .botoes-das-postagens {
     width: 100%!important;
-    float: right;
+    margin-bottom: 0;
 }
 
 #body-principal #editorLeitura3 > div.ace_scrollbar.ace_scrollbar-v::-webkit-scrollbar-track, 
@@ -1023,6 +1028,11 @@ body-principal .box-padrao h4 {
     width: 0.6em;
     background-color: #BBB;
     z-index: 0!important;
+}
+
+#body-principal .content-topic .botoes-das-postagens .onClikOpenComents{
+    cursor: pointer;
+    padding-left: 25%;
 }
 
 /*---------------------------------------------------*/
@@ -1179,7 +1189,7 @@ body-principal .box-padrao h4 {
 }
 
 .progress {
-       padding: 3px; 
+    padding: 3px; 
 }
 
 #body-principal #section-perfil #div-loading {
@@ -1256,7 +1266,7 @@ body-principal .box-padrao h4 {
 
 
 #body-principal .tabs .tab a:hover, .tabs .tab a.active{
-    color: rgba(72, 106, 134, 0.86)!important;
+    color: rgba(72, 106, 134, 0.95)!important;
 }
 
 .tabs .tab a.active {
@@ -1264,7 +1274,7 @@ body-principal .box-padrao h4 {
 }
 
 #body-principal .tabs .tab a {
-    color: rgba(72, 106, 134, 0.86);
+    color: rgba(72, 106, 134, 0.95);
 }
 
 #body-principal .tabs .indicator {
@@ -1293,8 +1303,104 @@ body-principal .box-padrao h4 {
     margin-top: 0!important;
 }
 
+#body-principal div.ace_scroller > div {
+    font: 15px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}
+
 @media only screen and (min-width: 993px){.row .col.offset-l2 {margin-left: 8.666667%;}}
 
+/*---------------------------------------------------*/
+
+/*----------------Modal de comentários-----------------*/
+
+/*---------------------------------------------------*/
+
+#body-principal #modal-comentarios {
+    height: auto;
+    max-height: 90%;
+    overflow: hidden;
+}
+
+#body-principal #modal-comentarios > div.modal-head.center-align > p{
+    background-color: #fff;
+    margin: 0;
+    border-bottom: 2px solid #9e9e9e;
+}
+
+#body-principal #progressComentarios {
+    display: none;
+    height: 7px;
+}
+
+#body-principal .divDosComentariosRealizados{
+    background-color: #fff;
+    margin: 0;
+    border-bottom: 2px solid #9e9e9e;
+    max-height: 60vw;
+    overflow-y: auto;
+}
+
+#body-principal .comentariosRealizadosPorUsuarios{
+    width: 90%;
+    background-color: #fff;
+    margin: 0;
+    border: 1px solid #e0e0e0;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#body-principal #nomeUsuarioComentario{
+    padding: 2px;
+    font-size: 0.7em;
+    color: grey;
+}
+
+#body-principal #dataComentario{
+    padding: 2px;
+    font-size: 0.7em;
+    color: grey;
+}
+
+#body-principal .textoComentariosRealizados {
+    font: 15px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    border-top: 1px solid #e0e0e0;
+    padding: 2px;
+}
+
+#body-principal #formDoModalComentarios {
+    height: 200px;
+}
+
+#body-principal #footer-comentarios{
+    height: 200px;
+}
+
+#body-principal #formDoModal > div > div.row.col.s12.center-align > p {
+    margin-bottom: 10px!important;
+}
+
+#body-principal #textarea-comentarios {
+    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    margin: 0;
+    height: 80px;
+}
+
+#footer-comentarios > div,
+#body-principal #footer-comentarios  > div > div,
+#body-principal #footer-comentarios > div.row.col.s12.center-align,
+#footer-comentarios > div.row.col.s12.center-align > p {
+    margin: 0;
+}
+
+#footer-comentarios > div.row.col.s12.center-align > p {
+    margin-bottom: 10px;
+}
+
+#body-principal #btn-submeter-comentarios {
+    margin: 0;
+}
 /*---------------------------------------------------*/
 
 /*----------------Graficos de indices----------------*/
@@ -1303,6 +1409,15 @@ body-principal .box-padrao h4 {
 
 #section-perfil > div > div {
     background-color: #fff;
+}
+
+#body-principal #headerIndices {
+    display: block!important;
+    margin: 0;
+}
+
+#body-principal #progressIndice {
+    display: none;
 }
 
 #section-perfil > div > div > ul > li > div.pie-charts.collapsible-body.col.s12.row {
