@@ -74,7 +74,7 @@ $("#body-principal > nav > div > ul > li").click(function () {
 /*------------------------------------------------------------------------*/
 //Função que mostra o "carregando" na tela.
 function carregando() {
-    $(".preloader-wrapper").show();
+    $("#progressGeral").show();
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -123,10 +123,9 @@ $("#body-principal > div.content-header.valign-wrapper > h1").click(function () 
     $('.aviso-minhas-materias').hide();
     abreComBotaoCelular();
     mapDeLinguagens.clear();
-//    pegaIndicesAJAX(userId);
     var classe = '.perfil';
     qualApareceNaTela(classe);
-    $('#headerIndices').collapsible({collapsed: true});
+    M.Collapsible.getInstance($('#ulCollapsibleIndices')).close();
     $("#body-principal > nav > div > ul > li").css("background-color", "rgba(0, 0, 0, 0)");
     $("#body-principal > nav > div > ul > li.icon-users").css("background-color", "rgba(64, 196, 255, 0.5)");
 });
@@ -136,8 +135,16 @@ $("#body-principal > div.content-header.valign-wrapper > h1").click(function () 
 $("ul.para-scroll > li").click(function () {
 
     closeImgChangeButton();
-    $("main > section.minhas-materias").empty();
     $('ul label li').removeClass('fundo-checked');
+
+    var idDoClique = $(this).children("span").attr('id');
+    if (idDoClique === 'acessibilidadeLetra') {
+        return;
+    }
+    
+    M.Collapsible.getInstance($('#ulCollapsibleIndices')).close();
+    $("main > section.minhas-materias").empty();
+
     //remove a tela que está aparecendo
     $("section").removeClass("section-aparece");
 
@@ -530,15 +537,15 @@ function pegaPostagens(materia) {
 
                 postagens = postagem;
 
-                $(".preloader-wrapper").hide();
+                $("#progressGeral").hide();
                 montaPostagens(postagens);
             })
             .fail(function (jqXHR, textStatus, postagem) {
 
 //                console.log(jqXHR);
 
-                M.toast({html:'Erro ao recuperar postagens, contate um administrador!', classes: 'red'});
-                $(".preloader-wrapper").hide();
+                M.toast({html: 'Erro ao recuperar postagens, contate um administrador!', classes: 'red'});
+                $("#progressGeral").hide();
                 if (jqXHR["status"] === 500) {
                     console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
                 } else if (jqXHR["status"] === 502) {
@@ -723,7 +730,7 @@ function retornaMaterias() {
             .fail(function (jqXHR, textStatus, postagem) {
                 $("#section-materias #div-loading").slideUp(500);
                 M.Toast.dismissAll();
-                M.toast({html:'Erro ao recuperar matérias, contate um administrador!', classes: 'red'});
+                M.toast({html: 'Erro ao recuperar matérias, contate um administrador!', classes: 'red'});
                 if (jqXHR["status"] === 500) {
                     console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
                 } else if (jqXHR["status"] === 502) {
@@ -778,6 +785,7 @@ function gerenciarMateriasConteudo() {
             var periodo = periodoMateriaSplit[1];
 
             var criaNomeMateria = document.createElement("span");
+            criaNomeMateria.setAttribute("class", "acessibilidade");
             var criaLi = document.createElement("li");
             var nomeDoCriaLabel = ("criaLabel" + [x]);
             nomeDoCriaLabel = document.createElement("label");
@@ -848,7 +856,7 @@ function atualizaMaterias() {
             // Limite de matérias
             if (novoVetorDeMaterias.length >= 7) {
                 M.Toast.dismissAll();
-                M.toast({html:'Você já atingiu o máximo de matérias, remova alguma antes!', classes: 'red'});
+                M.toast({html: 'Você já atingiu o máximo de matérias, remova alguma antes!', classes: 'red'});
                 $(this).prop("checked", false);
                 return;
             }
@@ -901,7 +909,7 @@ function atualizaMaterias() {
             }
         })
                 .done(function () {
-                    M.toast({html:'Matéria atualizada com sucesso!', classes: 'green'});
+                    M.toast({html: 'Matéria atualizada com sucesso!', classes: 'green'});
                     //    console.log("Materias atualizadas com sucesso!");
                 })
                 .fail(function (jqXHR, textStatus, resultado) {
@@ -1023,7 +1031,7 @@ function atualizaPerfilAJAX(id, nome, telefone, email) {
                 });
 
                 atualizaNomePerfil();
-                M.toast({html:'Perfil atualizado com sucesso!', classes: 'green'});
+                M.toast({html: 'Perfil atualizado com sucesso!', classes: 'green'});
 
             })
             .fail(function (jqXHR, textStatus, postagem) {
@@ -1036,7 +1044,7 @@ function atualizaPerfilAJAX(id, nome, telefone, email) {
                     console.log("Erro 404, não foi encontrado o diretório solicitado!");
                 }
 
-                M.toast({html:'Erro ao atualizar o perfil, contate um administrador!', classes: 'red'});
+                M.toast({html: 'Erro ao atualizar o perfil, contate um administrador!', classes: 'red'});
             });
 }
 
@@ -1111,17 +1119,17 @@ $("#btn-submeter-postagem").click(function (evento) {
         $('#modal-postagem').modal('close');
     } else {
         if (testaAssunto == false) {
-            M.toast({html:'Preencha o assunto da postagem corretamente', classes: 'red'});
+            M.toast({html: 'Preencha o assunto da postagem corretamente', classes: 'red'});
         } else if (assuntoTamanho > 20) {
-            M.toast({html:'Você não pode postar um assunto tão extenso, resuma o mesmo!', classes: 'red'});
+            M.toast({html: 'Você não pode postar um assunto tão extenso, resuma o mesmo!', classes: 'red'});
         } else if (assuntoTamanho < 5) {
-            M.toast({html:'Você não pode postar um assunto tão pequeno, explique mais!', classes: 'red'});
+            M.toast({html: 'Você não pode postar um assunto tão pequeno, explique mais!', classes: 'red'});
         } else if (linguagem == 'selecione a linguagem') {
-            M.toast({html:'Selecione a linguagem do código', classes: 'red'});
+            M.toast({html: 'Selecione a linguagem do código', classes: 'red'});
         } else if (postagemTamanho < 50) {
-            M.toast({html:'Você não pode postar um código tão pequeno, aproveite o espaço!', classes: 'red'});
+            M.toast({html: 'Você não pode postar um código tão pequeno, aproveite o espaço!', classes: 'red'});
         } else {
-            M.toast({html:'Erro ao adicionar postagem, contate um adiministrador', classes: 'red'});
+            M.toast({html: 'Erro ao adicionar postagem, contate um adiministrador', classes: 'red'});
         }
     }
 });
@@ -1169,11 +1177,11 @@ function adicionaPostagemNoBanco(assunto, linguagem, conteudoDaPostagem, qualMat
             .done(function (postagem) {
                 pegaPostagens(qualMateria);
                 limpaCamposPostagem();
-                M.toast({html:'Postagem enviada com sucesso!', classes: 'green'});
+                M.toast({html: 'Postagem enviada com sucesso!', classes: 'green'});
             })
             .fail(function (jqXHR, textStatus, postagem) {
-                M.toast({html:'Erro ao adicionar postagem, contate um administrador!', classes: 'red'});
-                $(".preloader-wrapper").hide();
+                M.toast({html: 'Erro ao adicionar postagem, contate um administrador!', classes: 'red'});
+                $("#progressGeral").hide();
                 if (jqXHR["status"] === 500) {
                     console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
                 } else if (jqXHR["status"] === 502) {
@@ -1236,8 +1244,8 @@ function pegaIndicesAJAX(userId) {
 
             })
             .fail(function (jqXHR, textStatus, resultados) {
-                M.toast({html:'Erro ao recuperar índices, contate um administrador!', classes: 'red'});
-                $(".preloader-wrapper").hide();
+                M.toast({html: 'Erro ao recuperar índices, contate um administrador!', classes: 'red'});
+                $("#progressGeral").hide();
                 if (jqXHR["status"] === 500) {
                     console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
                 } else if (jqXHR["status"] === 502) {

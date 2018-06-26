@@ -20,6 +20,9 @@
 
         <div class="content-header valign-wrapper">
             <h1 class="section-title">IF<span class="section-title-dois">community</span></h1>
+            <div id="progressGeral" class="progress">
+                <div class="indeterminate"></div>
+            </div>
         </div>
         <nav class="nav-side menu">
             <a href="#" class="nav-toggle"></a> 
@@ -55,6 +58,11 @@
                     </div>
                     <li tabindex="0" class="icon-dashboard"><span id="adicionar-materias">Gerenciar matérias</span></li>
                     <li tabindex="0" class="icon-help"><span id="ajuda">Ajuda</span></li>
+                    <li tabindex="0" class="icon-acessibility"><span id="acessibilidadeLetra">
+                            <a class="waves-effect waves-light btn transparent aumentarFonte" onClick="fonte('a');">A</a>
+                            <a class="waves-effect waves-light btn transparent diminuirFonte" onClick="fonte('d');">a</a>
+                        </span>
+                    </li>
                     <li tabindex="0" id="li-deslogar" class="icon-sair"><span id="btn-deslogar">Sair</span></li>
                 </ul>
             </div>
@@ -70,15 +78,15 @@
                     <div class="row">
                         <form class="col s12" id="form-perfil-div">
                             <div class="row" id="form-perfil">
-                                <div class="input-field col s6">
+                                <div class="input-field col s6"> 
                                     <i class="material-icons prefix">account_circle</i>
-                                    <input id="icon_prefix" type="text" class="validate nome-perfil-dashboard">
+                                    <input id="icon_prefix" type="text" class="validate nome-perfil-dashboard acessibilidade">
                                     <label for="icon_prefix">Nome completo</label>
                                     <span id="erro-nome-perfil-dashboard" class="erro-span"></span>
                                 </div>
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">phone</i>
-                                    <input id="icon_telephone" type="tel" class="validate telefone-perfil-dashboard">
+                                    <input id="icon_telephone" type="tel" class="validate telefone-perfil-dashboard acessibilidade">
                                     <label for="icon_telephone">Celular</label>
                                     <span id="erro-telefone-perfil-dashboard" class="erro-span"></span>
                                 </div>
@@ -86,13 +94,13 @@
                             <div class="row" id="form-perfil">
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">mail</i>
-                                    <input id="email" type="email" class="validate email-perfil-dashboard" value="">
+                                    <input id="email" type="email" class="validate email-perfil-dashboard acessibilidade" value="">
                                     <label for="email">Email</label>
                                     <span id="erro-email-perfil-dashboard" class="erro-span"></span>
                                 </div>
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">school</i>
-                                    <input disabled id="icon_prefix" type="text" class="validate matricula-perfil-dashboard" value="">
+                                    <input disabled id="icon_prefix" type="text" class="validate matricula-perfil-dashboard acessibilidade" value="">
                                     <label for="icon_prefix">Matrícula</label>
                                 </div>
                             </div>
@@ -124,11 +132,11 @@
                                         </div>
                                     </div>
                                     <div id="aviso" class="col s12">
-                                        <p>A partir de suas atividades serão gerados dados sobre suas contribuições.</p>
+                                        <p class="acessibilidade">A partir de suas atividades serão gerados dados sobre suas contribuições.</p>
                                     </div>
                                     <div class="pie-charts collapsible-body">
                                         <div class="pieID--micro-contribuicoes pie-chart--wrapper1 col s4">
-                                            <p>Contribuições</p>
+                                            <p class="acessibilidade">Contribuições</p>
                                             <div class="pie-chart">
                                                 <div class="pie-chart__pie"></div>
                                                 <ul class="pie-chart__legend">
@@ -136,7 +144,7 @@
                                             </div>
                                         </div>
                                         <div class="pieID--reputacao pie-chart--wrapper1 col s4">
-                                            <p>Reputação</p>
+                                            <p  class="acessibilidade">Reputação</p>
                                             <div class="pie-chart">
                                                 <div class="pie-chart__pie"></div>
                                                 <ul class="pie-chart__legend">
@@ -144,7 +152,7 @@
                                             </div>
                                         </div>
                                         <div class="pieID--linguagens pie-chart--wrapper1 col s4">
-                                            <p>Linguagens</p>
+                                            <p  class="acessibilidade">Linguagens</p>
                                             <div class="pie-chart">
                                                 <div class="pie-chart__pie"></div>
                                                 <ul class="pie-chart__legend">
@@ -190,11 +198,11 @@
                     <div class="container">
                         <div class="row">
                             <div class="col l6 s12 center-align">
-                                <h5 class="black-text">Bem vindo ao dashboard de postagens!</h5>
+                                <h5 class="acessibilidade black-text">Bem vindo ao dashboard de postagens!</h5>
                                 <img id="img-code" src="img/img-coding-section.png">
                             </div>
                             <div class="col l4 offset-l2 s12">
-                                <h5 class="black-text">Tips</h5>
+                                <h5 class="acessibilidade black-text">Tips</h5>
                                 <ul>
                                     <li>Clique em uma das matérias em que você está cadastrado no menu ao lado.</li>
                                 </ul>
@@ -249,7 +257,7 @@
                 </div>
             </section>
 
-            <!-- aqui é o loader que exibe enquanto carrega algo !--> 
+<!--             aqui é o loader que exibe enquanto carrega algo ! 
             <div class="preloader-wrapper big active">
                 <div class="spinner-layer spinner-blue-only">
                     <div class="circle-clipper left">
@@ -261,7 +269,7 @@
                         <div class="circle"></div>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
             <!-- bar para o modal e modal logo abaixo !-->  
             <div class="botao-modal">
@@ -286,9 +294,9 @@
                     </div>
                 </div>
                 <div class="modal-content">
-                    
+
                     <div class="center-align">                    
-                        <p>Buscar uma postagem<p>
+                        <p  class="acessibilidade">Buscar uma postagem</p>
                     </div>
 
                     <div class="row">
@@ -304,7 +312,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat"><i class="material-icons">search</i>Buscar</a>
+                    <!--<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat"><i class="material-icons">search</i>Buscar</a>-->
+                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Buscar</a>
                 </div>
             </div>
 
@@ -317,7 +326,7 @@
                 </div>
                 <form id="formDoModal">
                     <div class="modal-head center">
-                        <p>Escreva aqui a sua contribuição!</p>
+                        <p class="acessibilidade">Escreva aqui a sua contribuição!</p>
                     </div>
                     <hr>
 
@@ -362,7 +371,7 @@
                 </div>
 
                 <div class="modal-head center-align">
-                    <p>Comentários</p>
+                    <p class="acessibilidade">Comentários</p>
                     <div id="progressComentarios" class="progress">
                         <div class="indeterminate"></div>
                     </div>
@@ -385,7 +394,7 @@
                 <form id="formDoModalComentarios">
                     <div id="footer-comentarios" class="modal-footer">
                         <div class="row col s12 center-align">
-                            <p>Faça seu comentário</p>
+                            <p class="acessibilidade">Faça seu comentário</p>
                         </div>
 
 
@@ -428,12 +437,13 @@
         <script>
 //            console.log($.session.get('usuario'));
 //            console.log(typeof($.session.get('usuario')));
-            if ($.session.get('usuario') === undefined || typeof ($.session.get('usuario')) === "undefined") {
+                                if ($.session.get('usuario') === undefined || typeof ($.session.get('usuario')) === "undefined") {
 //                console.log("entrou aqui no sem sessão");
-                location.replace("index.html");
-            }
+                                    location.replace("index.html");
+                                }
         </script>
         <!-- Import Dashboard JS -->
+        <script src="js/acessibilidade.js"></script>
         <script src="js/comentarios.js"></script>
         <script src="js/uploadFoto.js"></script>
         <script src="js/dashboard.js"></script>
