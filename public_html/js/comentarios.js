@@ -27,7 +27,6 @@ function recuperaComentariosDaPostagem(idPostagem) {
 //                console.log(comentarios);
 //                console.log(typeof (comentarios));
                 $("#progressComentarios").hide();
-                $("main > section.minhas-materias").empty();
 
                 if (typeof (comentarios) != 'undefined') {
                     montaComentarios(comentarios);
@@ -35,7 +34,7 @@ function recuperaComentariosDaPostagem(idPostagem) {
 
             })
             .fail(function (jqXHR, textStatus, postagem) {
-                Materialize.toast('Erro ao recuperar comentários, contate um administrador!', 6000, 'red');
+                M.toast('Erro ao recuperar comentários, contate um administrador!', 6000, 'red');
                 $(".preloader-wrapper").hide();
                 if (jqXHR["status"] === 500) {
                     console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");

@@ -74,8 +74,15 @@ $("#body-principal > nav > div > ul > li").click(function () {
 /*------------------------------------------------------------------------*/
 //Função que mostra o "carregando" na tela.
 function carregando() {
-    $(".preloader-wrapper").show();
+    $("#progressGeral").show();
 }
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*     DROP DOWN DAS MATERIAS     */
+
+$(document).ready(function () {
+    $('.fixed-action-btn').floatingActionButton();
+});
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*     DROP DOWN DAS MATERIAS     */
@@ -90,7 +97,6 @@ $('li.icon-materias').click(function () {
 var flagOpenIndices = true;
 $('.perfil .collapsible-header').click(function () {
     mapDeLinguagens.clear();
-    $('section').scrollTo('.wrapper1');
     if (flagOpenIndices === true) {
         $('.pie-chart__legend').empty();
         pegaIndicesAJAX(userId);
@@ -120,6 +126,7 @@ $("#body-principal > div.content-header.valign-wrapper > h1").click(function () 
 //    pegaIndicesAJAX(userId);
     var classe = '.perfil';
     qualApareceNaTela(classe);
+    $('#headerIndices').collapsible({collapsed: true});
     $("#body-principal > nav > div > ul > li").css("background-color", "rgba(0, 0, 0, 0)");
     $("#body-principal > nav > div > ul > li.icon-users").css("background-color", "rgba(64, 196, 255, 0.5)");
 });
@@ -129,13 +136,20 @@ $("#body-principal > div.content-header.valign-wrapper > h1").click(function () 
 $("ul.para-scroll > li").click(function () {
 
     closeImgChangeButton();
-    $("main > section.minhas-materias").empty();
     $('ul label li').removeClass('fundo-checked');
+
+    var idDoClique = $(this).children("span").attr('id');
+    if (idDoClique === 'acessibilidadeLetra') {
+        return;
+    }
+
+    $("main > section.minhas-materias").empty();
     //remove a tela que está aparecendo
     $("section").removeClass("section-aparece");
 
     //fecha o menu de minhas materias
     var textoDoClique = $(this).children("span").text();
+
     if (textoDoClique !== 'Minhas matérias') {
         $('.minhas-materias-adicionadas').slideUp();
         $('.aviso-minhas-materias').hide();
@@ -184,6 +198,8 @@ var minhasMaterias = lista.parent();
 //  Essa função preenche o vetor matérias de acordo com o retorno do ajax que busca as mastérias cadastradas pelo usuário.
 // Caso esse vetor esteja vazio, ele retorna uma mensagem pro cara cadastrar nas materias.
 function preencheAListaDeMateriasDoMenu() {
+//    console.log(materias);
+//    console.log(periodoMateria);
     lista.detach().empty().each(function (i) {
 
         if (materias.length === 0) {
@@ -306,9 +322,9 @@ $(".nav-side .nav-toggle").on("click", function (e) {
 /*              Plugin dos selects                          */
 
 $(document).ready(function () {
-    $('select').material_select();
+    $('select').formSelect();
 });
-$('select').material_select('destroy');
+//$('select').destroy();
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*                Sidebar para postar os codigos, ou seja, aquele botão com <> que clica e abre o modal.                    */
@@ -445,6 +461,7 @@ function qualLinguagemParaPostagem(text, IDPostagem) {
 function collapsible() {
     $('.collapsible').collapsible();
 }
+$('.collapsible').collapsible();
 
 function trocaMaxMinBoxPostagens() {
     $('#body-principal section.minhas-materias > ul.collapsible > li > div.collapsible-header').click(function () {
@@ -495,7 +512,7 @@ function pegaPostagensDaMateriaSelecionada() {
 }
 
 function pegaPostagens(materia) {
-    Materialize.Toast.removeAll();
+    M.Toast.dismissAll();
 
     // Por enquanto 
     var lastPost = ""
@@ -520,15 +537,15 @@ function pegaPostagens(materia) {
 
                 postagens = postagem;
 
-                $(".preloader-wrapper").hide();
+                $("#progressGeral").hide();
                 montaPostagens(postagens);
             })
             .fail(function (jqXHR, textStatus, postagem) {
 
 //                console.log(jqXHR);
 
-                Materialize.toast('Erro ao recuperar postagens, contate um administrador!', 6000, 'red');
-                $(".preloader-wrapper").hide();
+                M.toast({html: 'Erro ao recuperar postagens, contate um administrador!', classes: 'red'});
+                $("#progressGeral").hide();
                 if (jqXHR["status"] === 500) {
                     console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
                 } else if (jqXHR["status"] === 502) {
@@ -712,8 +729,8 @@ function retornaMaterias() {
             })
             .fail(function (jqXHR, textStatus, postagem) {
                 $("#section-materias #div-loading").slideUp(500);
-                Materialize.Toast.removeAll();
-                Materialize.toast('Erro ao recuperar matérias, contate um administrador!', 6500, 'red');
+                M.Toast.dismissAll();
+                M.toast({html: 'Erro ao recuperar matérias, contate um administrador!', classes: 'red'});
                 if (jqXHR["status"] === 500) {
                     console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
                 } else if (jqXHR["status"] === 502) {
@@ -774,6 +791,7 @@ function gerenciarMateriasConteudo() {
             var nomeDoCriaInput = ("criaInput" + [x]);
             nomeDoCriaInput = document.createElement("input");
             criaNomeMateria.appendChild(document.createTextNode(materia));
+            criaLi.append(nomeDoCriaInput);
             criaLi.append(criaNomeMateria);
             nomeDoCriaLabel.setAttribute("for", "test" + x);
             nomeDoCriaLabel.setAttribute("class", "col s12");
@@ -783,7 +801,6 @@ function gerenciarMateriasConteudo() {
             nomeDoCriaInput.setAttribute("name", materia);
             $(".adicionar-materias div.box-padrao .row > ul.collapsible  li").find("div.collapsible-body").each(function () {
                 if (this.id === periodo) {
-                    this.append(nomeDoCriaInput);
                     this.append(nomeDoCriaLabel);
                 }
 
@@ -837,8 +854,8 @@ function atualizaMaterias() {
 
             // Limite de matérias
             if (novoVetorDeMaterias.length >= 7) {
-                Materialize.Toast.removeAll();
-                Materialize.toast('Você já atingiu o máximo de matérias, remova alguma antes!', 2500, 'red');
+                M.Toast.dismissAll();
+                M.toast({html: 'Você já atingiu o máximo de matérias, remova alguma antes!', classes: 'red'});
                 $(this).prop("checked", false);
                 return;
             }
@@ -869,15 +886,15 @@ function atualizaMaterias() {
     atualizaMateriasTelaAdicionar(materias);
 
     function atualizaMateriasTelaAdicionar(materias) {
-        Materialize.Toast.removeAll();
+        M.Toast.dismissAll();
 //        console.log(materias);
         $.ajax({
             url: "https://ifcommunity.herokuapp.com/matter/user",
             type: 'post',
-//            contentType: "application/json",
-//            crossDomain: true,
+            contentType: "application/json",
+            crossDomain: true,
             data: JSON.stringify({
-                studentId: userId,
+                studentId: studentId,
                 matter1: materias[0],
                 matter2: materias[1],
                 matter3: materias[2],
@@ -891,7 +908,7 @@ function atualizaMaterias() {
             }
         })
                 .done(function () {
-                    Materialize.toast('Matéria atualizada com sucesso!', 2500, 'green');
+                    M.toast({html: 'Matéria atualizada com sucesso!', classes: 'green'});
                     //    console.log("Materias atualizadas com sucesso!");
                 })
                 .fail(function (jqXHR, textStatus, resultado) {
@@ -973,7 +990,7 @@ function atualizaNomePerfil() {
 
 //Função que atualiza os dados do usuario e retorna os novos dados inseridos no banco
 function atualizaPerfilAJAX(id, nome, telefone, email) {
-    Materialize.Toast.removeAll();
+    M.Toast.dismissAll();
 
 //    console.log(id);
 //    console.log(nome);
@@ -1013,7 +1030,7 @@ function atualizaPerfilAJAX(id, nome, telefone, email) {
                 });
 
                 atualizaNomePerfil();
-                Materialize.toast('Perfil atualizado com sucesso!', 2500, 'green');
+                M.toast({html: 'Perfil atualizado com sucesso!', classes: 'green'});
 
             })
             .fail(function (jqXHR, textStatus, postagem) {
@@ -1026,7 +1043,7 @@ function atualizaPerfilAJAX(id, nome, telefone, email) {
                     console.log("Erro 404, não foi encontrado o diretório solicitado!");
                 }
 
-                Materialize.toast('Erro ao atualizar o perfil, contate um administrador!', 2500, 'red');
+                M.toast({html: 'Erro ao atualizar o perfil, contate um administrador!', classes: 'red'});
             });
 }
 
@@ -1101,17 +1118,17 @@ $("#btn-submeter-postagem").click(function (evento) {
         $('#modal-postagem').modal('close');
     } else {
         if (testaAssunto == false) {
-            Materialize.toast('Preencha o assunto da postagem corretamente', 6000, 'red');
+            M.toast({html: 'Preencha o assunto da postagem corretamente', classes: 'red'});
         } else if (assuntoTamanho > 20) {
-            Materialize.toast('Você não pode postar um assunto tão extenso, resuma o mesmo!', 6000, 'red');
+            M.toast({html: 'Você não pode postar um assunto tão extenso, resuma o mesmo!', classes: 'red'});
         } else if (assuntoTamanho < 5) {
-            Materialize.toast('Você não pode postar um assunto tão pequeno, explique mais!', 6000, 'red');
+            M.toast({html: 'Você não pode postar um assunto tão pequeno, explique mais!', classes: 'red'});
         } else if (linguagem == 'selecione a linguagem') {
-            Materialize.toast('Selecione a linguagem do código', 6000, 'red');
+            M.toast({html: 'Selecione a linguagem do código', classes: 'red'});
         } else if (postagemTamanho < 50) {
-            Materialize.toast('Você não pode postar um código tão pequeno, aproveite o espaço!', 6000, 'red');
+            M.toast({html: 'Você não pode postar um código tão pequeno, aproveite o espaço!', classes: 'red'});
         } else {
-            Materialize.toast('Erro ao adicionar postagem, contate um adiministrador', 6000, 'red');
+            M.toast({html: 'Erro ao adicionar postagem, contate um adiministrador', classes: 'red'});
         }
     }
 });
@@ -1129,7 +1146,7 @@ function testaPost(texto) {
 function limpaCamposPostagem() {
     $("[name='assunto']").val("");
     $('#formDoModal select').prop('selectedIndex', 0);
-    $('#formDoModal select').material_select();
+    $('select').formSelect();
     editor.setValue("");
     $('.paraCodigo').hide();
 }
@@ -1159,11 +1176,11 @@ function adicionaPostagemNoBanco(assunto, linguagem, conteudoDaPostagem, qualMat
             .done(function (postagem) {
                 pegaPostagens(qualMateria);
                 limpaCamposPostagem();
-                Materialize.toast('Postagem enviada com sucesso!', 6000, 'green');
+                M.toast({html: 'Postagem enviada com sucesso!', classes: 'green'});
             })
             .fail(function (jqXHR, textStatus, postagem) {
-                Materialize.toast('Erro ao adicionar postagem, contate um administrador!', 6000, 'red');
-                $(".preloader-wrapper").hide();
+                M.toast({html: 'Erro ao adicionar postagem, contate um administrador!', classes: 'red'});
+                $("#progressGeral").hide();
                 if (jqXHR["status"] === 500) {
                     console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
                 } else if (jqXHR["status"] === 502) {
@@ -1203,7 +1220,7 @@ var flagComPost = false;
 
 
 function pegaIndicesAJAX(userId) {
-    Materialize.Toast.removeAll();
+    M.Toast.dismissAll();
 
     $.ajax({
         url: "https://ifcommunity.herokuapp.com/user/charts?userId=" + userId,
@@ -1226,8 +1243,8 @@ function pegaIndicesAJAX(userId) {
 
             })
             .fail(function (jqXHR, textStatus, resultados) {
-                Materialize.toast('Erro ao recuperar índices, contate um administrador!', 6000, 'red');
-                $(".preloader-wrapper").hide();
+                M.toast({html: 'Erro ao recuperar índices, contate um administrador!', classes: 'red'});
+                $("#progressGeral").hide();
                 if (jqXHR["status"] === 500) {
                     console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
                 } else if (jqXHR["status"] === 502) {

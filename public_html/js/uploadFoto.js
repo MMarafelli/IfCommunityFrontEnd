@@ -32,14 +32,14 @@ $('#fileUpload').click(function (event) {
 });
 
 $('#fileUpload').change(function (event) {
-    console.log(this.files[0].size);
+//    console.log(this.files[0].size);
     var target = event.target || event.srcElement;
     if (target.value.length === 0) {
         if (numFiles === target.files.length) {
         }
     } else if (this.files[0].size > 999999) {
         var ext = this.value.match(/\.([^\.]+)$/)[1];
-        Materialize.toast('Tamanho máximo de imagem é 1 megabyte!', 6000, 'red');
+        M.toast({html:'Tamanho máximo de imagem é 1 megabyte!', classes: 'red'});
     } else {
         var ext = this.value.match(/\.([^\.]+)$/)[1];
         switch (ext) {
@@ -50,7 +50,7 @@ $('#fileUpload').change(function (event) {
                 imgFormatAccepted(ext);
                 break;
             default:
-                Materialize.toast('Formato ' + ext + ' de imagem inválido!', 6000, 'red');
+                M.toast({html:'Formato ' + ext + ' de imagem inválido!', classes: 'red'});
                 this.value = '';
         }
     }
@@ -153,10 +153,10 @@ function uploadImg(ImageURL) {
     })
             .done(function () {
                 $(".preloader-wrapper").hide();
-                Materialize.toast('Foto enviada com sucesso!', 6000, 'green');
+                M.toast({html:'Foto enviada com sucesso!', classes: 'green'});
             })
             .fail(function (jqXHR) {
-                Materialize.toast('Erro ao adicionar foto, contate um administrador!', 6000, 'red');
+                M.toast({html:'Erro ao adicionar foto, contate um administrador!', classes: 'green'});
                 $(".preloader-wrapper").hide();
                 if (jqXHR["status"] === 500) {
                     console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
