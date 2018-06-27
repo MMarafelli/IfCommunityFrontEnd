@@ -152,7 +152,7 @@ function uploadImg(ImageURL) {
             "photoHash": ImageURL
         }),
         beforeSend: function () {
-            carregando();
+            $("#progressGeral").show();
         }
     })
             .done(function () {

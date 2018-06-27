@@ -125,6 +125,7 @@ $("#body-principal > div.content-header.valign-wrapper > h1").click(function () 
     mapDeLinguagens.clear();
     var classe = '.perfil';
     qualApareceNaTela(classe);
+    flagOpenIndices = true;
     M.Collapsible.getInstance($('#ulCollapsibleIndices')).close();
     $("#body-principal > nav > div > ul > li").css("background-color", "rgba(0, 0, 0, 0)");
     $("#body-principal > nav > div > ul > li.icon-users").css("background-color", "rgba(64, 196, 255, 0.5)");
@@ -142,6 +143,7 @@ $("ul.para-scroll > li").click(function () {
         return;
     }
 
+    flagOpenIndices = true;
     M.Collapsible.getInstance($('#ulCollapsibleIndices')).close();
     $("main > section.minhas-materias").empty();
 
@@ -1250,8 +1252,10 @@ function pegaIndicesAJAX() {
     $.ajax({
         url: "https://ifcommunity.herokuapp.com/user/charts",
         type: 'get',
+        contentType: "application/json",
+        crossDomain: true,
         data: {
-            id: userId
+            userId: userId
         },
         beforeSend: function () {
             $("#progressIndice").show();
