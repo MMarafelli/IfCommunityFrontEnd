@@ -138,6 +138,10 @@ function closeImgChangeButton() {
 }
 
 function uploadImg(ImageURL) {
+    
+    var usuario = $(jQuery.parseJSON($.session.get('usuario')));
+    var userId = usuario["0"].userId;
+
     $.ajax({
         url: 'https://ifcommunity.herokuapp.com/user/photo', // Url do lado server que vai receber o arquivo
         type: 'POST',

@@ -141,7 +141,7 @@ $("ul.para-scroll > li").click(function () {
     if (idDoClique === 'acessibilidadeLetra') {
         return;
     }
-    
+
     M.Collapsible.getInstance($('#ulCollapsibleIndices')).close();
     $("main > section.minhas-materias").empty();
 
@@ -202,22 +202,17 @@ function preencheAListaDeMateriasDoMenu() {
 //    console.log(periodoMateria);
     lista.detach().empty().each(function (i) {
 
-        if (materias.length === 0) {
-            materias.push("Você ainda não tem nenhuma matéria cadastrada!");
+        var a = materias.indexOf("Erro ao buscar matérias ou não foi encontrada nenhuma!");
+
+        if (materias.length > 1 && a >= 0) {
+            materias.splice(a, 1);
+        } else if (materias.length === 0) {
+            materias.push("Erro ao buscar matérias ou não foi encontrada nenhuma!");
         }
 
-        for (var x = 0; x < materias.length; x++) {
 
-            // Isso aqui é um remédio caso ocorra, acho que não tem situação em que possa occorer, mas... É mais um cuidado.
-            // Enfim, caso o array materias chegue aqui com a mensagem de não tem matérias, ele remove essa mensage antes de gerar a lista de materias cadastradas.
-            var a = materias.indexOf("Você ainda não tem nenhuma matéria cadastrada!");
-            if (a !== 0) {
-                for (var i = materias.length - 1; i >= 0; i--) {
-                    if (materias[i] === "Você ainda não tem nenhuma matéria cadastrada!") {
-                        materias.splice(i, 1);
-                    }
-                }
-            }
+        for (var x = 0; x < materias.length; x++) {
+//            console.log(materias[x]);
             // Aqui preenche a lista de materias com as matérias que o cara tem cadastradas.
             $(this).append('<input type="radio" name="materias-radio" id="materia' + x + '" style="display:none!important" /><label for="materia' + x + '"><li><span>' + materias[x] + '</span></li></label>');
             if (x === materias.length - 1) {
@@ -242,9 +237,17 @@ function pegaMateriasComAjax() {
     progress.append(indeterminate);
     li.append(progress);
 
+    var usuario = $(jQuery.parseJSON($.session.get('usuario')));
+    var studentId = usuario["0"].studentId;
+
     $.ajax({
-        url: "https://ifcommunity.herokuapp.com/matter/user?studentId=" + studentId,
+        url: "https://ifcommunity.herokuapp.com/matter/user",
         type: 'get',
+        contentType: "application/json",
+        crossDomain: true,
+        data: {
+            studentId: studentId
+        },
         beforeSend: function () {
             loading.append(li);
         }
@@ -694,7 +697,6 @@ function adicionaPostagens(textoPostagem, autorPostagem, tituloPostagem, dataPos
 //          GERENCIAR MATERIAS    
 
 // Primeiro, do vetor com as matérias que ele já tem e os períodos delas.
-// O vetor das materias, ja temos, agora falta o dos períodos.
 
 function retornaMaterias() {
     $.ajax({
@@ -707,7 +709,6 @@ function retornaMaterias() {
         }
     })
             .done(function (materiasJSON) {
-//                console.log(materiasJSON);
 
                 $("#section-materias #div-loading").hide();
                 periodoMateria = [];
@@ -888,7 +889,12 @@ function atualizaMaterias() {
 
     function atualizaMateriasTelaAdicionar(materias) {
         M.Toast.dismissAll();
-//        console.log(materias);
+
+        var usuario = $(jQuery.parseJSON($.session.get('usuario')));
+        var userId = usuario["0"].userId;
+        var studentId = usuario["0"].studentId;
+//        ARRUMAR
+
         $.ajax({
             url: "https://ifcommunity.herokuapp.com/matter/user",
             type: 'post',
@@ -908,9 +914,8 @@ function atualizaMaterias() {
                 // console.log("Atualizando as matérias");
             }
         })
-                .done(function () {
+                .done(function (resultado) {
                     M.toast({html: 'Matéria atualizada com sucesso!', classes: 'green'});
-                    //    console.log("Materias atualizadas com sucesso!");
                 })
                 .fail(function (jqXHR, textStatus, resultado) {
                     console.log(resultado)
@@ -961,7 +966,9 @@ $("#li-deslogar").on('click', function (e) {
 /*--------------------------------------------------------------------------------------------------------------------------------------------------*/
 //ATUALIZAÇÃO DE PERFIL
 $("#btn-atualizar-perfil").click(function () {
-    var aluno = [];
+    var usuario = $(jQuery.parseJSON($.session.get('usuario')));
+    var userId = usuario["0"].userId;
+
     atualizaPerfilAJAX(userId, $(".nome-perfil-dashboard").val(), $(".telefone-perfil-dashboard").val(), $(".email-perfil-dashboard").val());
 });
 
@@ -977,26 +984,30 @@ $("#btn-limpar-perfil").click(function () {
 
 //Função que muda nome do perfil após atualizar perfil
 function atualizaNomePerfil() {
-    var nomePerfil = aluno[0];
-
-    nomePerfil = nomePerfil.split(" ");
-    if (nomePerfil.length >= 1) {
-        nomePerfil = nomePerfil[0] + " " + nomePerfil[1];
+    var usuario = $(jQuery.parseJSON($.session.get('usuario')));
+    var nomePerfil = usuario["0"].name;
+    var hasSpace = nomePerfil.indexOf(' ') >= 0;
+    if (hasSpace === true) {
+        nomePerfil = nomePerfil.split(" ");
+        if (nomePerfil.length >= 1) {
+            nomePerfil = nomePerfil[0] + " " + nomePerfil[1];
+        } else {
+            nomePerfil = nomePerfil[0];
+        }
+        $("#nome-usuario").text(nomePerfil);
     } else {
-        nomePerfil = nomePerfil[0];
+        $("#nome-usuario").text(nomePerfil);
     }
-
-    $("#nome-usuario").text(nomePerfil);
 }
 
 //Função que atualiza os dados do usuario e retorna os novos dados inseridos no banco
 function atualizaPerfilAJAX(id, nome, telefone, email) {
     M.Toast.dismissAll();
 
-//    console.log(id);
-//    console.log(nome);
-//    console.log(telefone);
-//    console.log(email);
+    console.log(id);
+    console.log(nome);
+    console.log(telefone);
+    console.log(email);
 
     telefone = telefone.split("(");
     telefone = telefone[1].split(")");
@@ -1022,19 +1033,25 @@ function atualizaPerfilAJAX(id, nome, telefone, email) {
         }
     })
             .done(function (alunoJSON) {
+                console.log(alunoJSON);
                 $("#section-perfil #div-loading").slideUp(500);
 
-                aluno = [];
-                $(jQuery.parseJSON(JSON.stringify(alunoJSON))).each(function () {
-                    var name = this.name;
-                    aluno.push(name);
-                });
+//                $(jQuery.parseJSON(JSON.stringify(alunoJSON))).each(function () {
+//                    var name = this.name;
+//                });
+
+                //                Trata cache para nome
+                var usuario = $(jQuery.parseJSON($.session.get('usuario')));
+                usuario["0"].name = nome;
+                $.session.clear();
+                $.session.set("usuario", JSON.stringify(usuario));
 
                 atualizaNomePerfil();
                 M.toast({html: 'Perfil atualizado com sucesso!', classes: 'green'});
 
             })
             .fail(function (jqXHR, textStatus, postagem) {
+                console.log(jqXHR);
                 $("#section-perfil #div-loading").slideUp(500);
                 if (jqXHR["status"] === 500) {
                     console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
@@ -1158,10 +1175,14 @@ function adicionaPostagemNoBanco(assunto, linguagem, conteudoDaPostagem, qualMat
 //    console.log(conteudoDaPostagem);
 //    console.log(qualMateria);
 
+    var usuario = $(jQuery.parseJSON($.session.get('usuario')));
+    var userId = usuario["0"].userId;
+
+
     $.ajax({
         url: "https://ifcommunity.herokuapp.com/post/make",
         type: 'post',
-        contentType: "application/json",
+//        contentType: "application/json",
 //        crossDomain: true,
         data: JSON.stringify({
             authorId: userId,
@@ -1220,15 +1241,18 @@ var flagRep = false;
 var flagComPost = false;
 
 
-function pegaIndicesAJAX(userId) {
+function pegaIndicesAJAX() {
     M.Toast.dismissAll();
 
+    var usuario = $(jQuery.parseJSON($.session.get('usuario')));
+    var userId = usuario["0"].userId;
+
     $.ajax({
-        url: "https://ifcommunity.herokuapp.com/user/charts?userId=" + userId,
+        url: "https://ifcommunity.herokuapp.com/user/charts",
         type: 'get',
-//        data: {
-//            id: id
-//        },
+        data: {
+            id: userId
+        },
         beforeSend: function () {
             $("#progressIndice").show();
         }

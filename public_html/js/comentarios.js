@@ -61,8 +61,27 @@ function montaComentarios(comentarios) {
 }
 
 function insereComentariosNaTela(commentId, registerDate, authorName, commentText) {
+//   2018-06-25 10:17:33.0
+//   ÀS 21:11 26/06/2018
 
-    $('.divDosComentariosRealizados').append('<div id=' + commentId + ' class="comentariosRealizadosPorUsuarios col s12"><div id="nomeUsuarioComentario' + commentId + '" class="col s8">' + authorName + '</div><div id="dataComentario" class="col s4">' + registerDate + '</div><div id="Comentario" class="textoComentariosRealizados col s12">' + commentText + '</div></div>');
+    //Manipulação da data da postagem
+    var temporarioData = registerDate.split(" ");
+    var temporarioHora = temporarioData[1].split(".");
+
+    //Manipulação da hora da postagem
+    var horaPostagem = temporarioHora[0];
+    horaPostagem = horaPostagem.split(":");
+    horaPostagem = horaPostagem[0] + ":" + horaPostagem[1];
+
+    //Manipulação do dia do comentário
+    var dataComentarioTemp = temporarioData[0];
+    dataComentarioTemp = dataComentarioTemp.split("-");
+    dataComentarioTemp = dataComentarioTemp[2] + "/" + dataComentarioTemp[1] + "/" + dataComentarioTemp[0];
+
+    //Concatenação da data e hora manipulada
+    registerDate = "às " + horaPostagem + " " + dataComentarioTemp;
+
+    $('.divDosComentariosRealizados').append('<div id=' + commentId + ' class="comentariosRealizadosPorUsuarios col s12"><div id="nomeUsuarioComentario' + commentId + '" class="col s8">' + authorName + '</div><div id="dataComentario" class="col s4 right-align">' + registerDate + '</div><div id="Comentario" class="textoComentariosRealizados col s12">' + commentText + '</div></div>');
 
 }
 
