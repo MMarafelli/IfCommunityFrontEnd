@@ -1074,6 +1074,19 @@ body-principal .box-padrao h4 {
     padding-left: 25%;
 }
 
+#body-principal .postUserInfo {
+    position: relative;
+}
+
+#body-principal div.collapsible-header > ul > li > img {
+    width: 100%;
+    height: auto;
+    max-width:80px;
+    position: absolute;
+    top: 0;
+    margin: 6px;
+}
+
 /*---------------------------------------------------*/
 
 /*----------------Menu de postagens------------------*/

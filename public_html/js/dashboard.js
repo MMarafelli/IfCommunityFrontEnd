@@ -566,6 +566,7 @@ function pegaPostagens(materia) {
 
 //Função que prepara o texto da postagem e chama a fução que cria e adiciona na tela
 function montaPostagens(postagens) {
+//    console.log(postagens)
     $(".minhas-materias").empty();
     postagens.reverse();
     $(jQuery.parseJSON(JSON.stringify(postagens))).each(function (index) {
@@ -577,8 +578,9 @@ function montaPostagens(postagens) {
         var materiaPostagem = this.matterName;
         var IDPostagem = this.postId;
         var linguagemPostagem = this.programmingLanguage;
+        var hashPhotoAutor = this.hashPhotoAutor;
         // console.log(linguagemPostagem);
-        adicionaPostagens(textoPostagem, autorPostagem, tituloPostagem, dataPostagem, materiaPostagem, IDPostagem, x);
+        adicionaPostagens(textoPostagem, autorPostagem, tituloPostagem, dataPostagem, materiaPostagem, IDPostagem, x, hashPhotoAutor);
         collapsible();
         if (linguagemPostagem == 'selecione a linguagem') {
         } else {
@@ -598,7 +600,7 @@ function montaPostagens(postagens) {
 }
 
 //Função que adiciona a estrutura de postagem
-function adicionaPostagens(textoPostagem, autorPostagem, tituloPostagem, dataPostagem, materiaPostagem, IDPostagem, x) {
+function adicionaPostagens(textoPostagem, autorPostagem, tituloPostagem, dataPostagem, materiaPostagem, IDPostagem, x, hashPhotoAutor) {
 
     //Manipulação da data da postagem
     var temporarioData = dataPostagem.split(" ");
@@ -618,77 +620,38 @@ function adicionaPostagens(textoPostagem, autorPostagem, tituloPostagem, dataPos
     dataPostagem = "às " + horaPostagem + " " + dataPostagemTemp;
 
     var secaoDePostagens = $("main > section.minhas-materias");
-    var criaUl = document.createElement("ul");
-    var criaLi = document.createElement("li");
-    var criaDivHead = document.createElement("div");
-    var criaUlHead = document.createElement("ul");
-    var criaLiBrowse = document.createElement("li");
-    var criaLiHead1 = document.createElement("li");
-    var criaLiHead2 = document.createElement("li");
-    var criaH4Titulo = document.createElement("h4");
-    var criaPNome = document.createElement("p");
-    var criaPSeta = document.createElement("p");
-    var criaDivBody = document.createElement("div");
-    var criaPreBody = document.createElement("pre");
-    var criaDivBotoesComentarios = document.createElement("div");
-    var criaDivChamaComentarios = document.createElement("div");
-    var criaDivBotoesLikeDeslike = document.createElement("div");
-    var criaALike = document.createElement("a");
-    var criaILike = document.createElement("i");
-    var criaADislike = document.createElement("a");
-    var criaIDislike = document.createElement("i");
-    var criaPDataPostagem = document.createElement("p");
-
-    criaDivHead.setAttribute("class", "collapsible-header");
-    criaH4Titulo.setAttribute("class", "center");
-    criaH4Titulo.innerHTML = tituloPostagem;
-    criaPNome.innerHTML = autorPostagem + "<br><span class='data-postagem' id='data-hora-postagem-'" + IDPostagem + ">" + dataPostagem;
-    criaPNome.setAttribute("class", "right-align autor-postagem");
-    criaPSeta.setAttribute("class", "setinha-indicadora center");
-    criaUlHead.setAttribute("class", "container");
-    criaDivBody.setAttribute("class", "collapsible-body");
-    criaPreBody.setAttribute("id", "editorLeitura" + IDPostagem);
-    criaPreBody.setAttribute("class", "paraCodigoPostagens");
-    criaPreBody.innerHTML = textoPostagem;
-    criaDivChamaComentarios.innerHTML = "Comentários";
-    criaDivChamaComentarios.setAttribute("class", "center-align col s9 onClikOpenComents");
-    criaDivBotoesLikeDeslike.setAttribute("class", "right-align col s3");
-    criaDivBotoesComentarios.setAttribute("class", "botoes-das-postagens col s12 row");
-    criaALike.setAttribute("class", "waves-effect waves-light btn right-align botao-curtida");
-    criaILike.setAttribute("class", "material-icons left");
-    criaILike.innerHTML = "thumb_up";
-//    criaDivBotoesComentarios.setAttribute("class", "botoes-das-postagens right-align col s3");
-    criaADislike.setAttribute("class", "waves-effect waves-light btn right-align botao-curtida");
-    criaIDislike.setAttribute("class", "material-icons left");
-    criaIDislike.innerHTML = "thumb_down";
-    criaDivBotoesComentarios.setAttribute("id", IDPostagem);
-    criaUl.setAttribute("class", "collapsible content-topic z-depth-2 container row");
-    criaUl.setAttribute('data-collapsible', "accordion");
-    criaLiBrowse.innerHTML = "<div class='browser'><div class='btns'><div class='max'></div></div></div>";
-
-
-    criaLiHead1.append(criaH4Titulo);
-    criaLiHead2.append(criaPNome);
-    criaLiHead2.append(criaPSeta);
-    criaUlHead.append(criaLiBrowse);
-    criaUlHead.append(criaLiHead1);
-    criaUlHead.append(criaLiHead2);
-    criaDivHead.append(criaUlHead);
-    criaDivBody.append(criaPreBody);
-    criaALike.append(criaILike);
-    criaADislike.append(criaIDislike);
-    criaDivBotoesComentarios.append(criaDivChamaComentarios);
-    criaDivBotoesLikeDeslike.append(criaALike);
-    criaDivBotoesLikeDeslike.append(criaADislike);
-    criaDivBotoesComentarios.append(criaDivBotoesLikeDeslike);
-    criaDivBody.append(criaDivBotoesComentarios);
-    criaLi.setAttribute("id", IDPostagem);
-    criaLi.append(criaDivHead);
-    criaLi.append(criaDivBody);
-    criaUl.append(criaLi);
-    criaUl.setAttribute("id", IDPostagem);
+    
     // quando criar a regra de retorno do banco decide o prepend ou append.
-    secaoDePostagens.prepend(criaUl);
+    secaoDePostagens.prepend('<ul class="collapsible content-topic z-depth-2 container row" data-collapsible="accordion" id="'+ IDPostagem +'">\n\
+    <li id="'+ IDPostagem +'">\n\
+        <div class="collapsible-header">\n\
+            <ul class="container">\n\
+                <li>\n\
+                    <div class="browser">\n\
+                        <div class="btns">\n\
+                            <div class="min"></div>\n\
+                        </div>\n\
+                    </div>\n\
+                </li>\n\
+                <li>\n\
+                    <h4 class="center">' + tituloPostagem + '</h4>\n\
+                </li>\n\
+                <li class="postUserInfo">\n\
+                    <img class="responsive-img circle" alt="" src="'+ hashPhotoAutor +'">\n\
+                    <p class="right-align autor-postagem">' + autorPostagem + '<br><span class="data-postagem" id="data-hora-postagem-' + IDPostagem + '">' + dataPostagem + '</span></p>\n\
+                    <p class="setinha-indicadora center"></p>\n\
+                </li>\n\
+            </ul>\n\
+        </div>\n\
+        <div class="collapsible-body">\n\
+            <pre id="editorLeitura' + IDPostagem + '" class="paraCodigoPostagens"> ' + textoPostagem + '</pre>\n\
+            <div class="botoes-das-postagens col s12 row" id="' + IDPostagem + '">\n\
+                <div class="center-align col s9 onClikOpenComents">Comentários</div>\n\
+                <div class="right-align col s3"><a class="waves-effect waves-light btn right-align botao-curtida"><i class="material-icons left">thumb_up</i></a><a class="waves-effect waves-light btn right-align botao-curtida"><i class="material-icons left">thumb_down</i></a></div>\n\
+            </div>\n\
+        </div>\n\
+    </li>\n\
+</ul>');
 
     if (x === (postagens.length - 1)) {
         secaoDePostagens.append("<div class='rodape'></div>");
