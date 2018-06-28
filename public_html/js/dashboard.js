@@ -857,7 +857,7 @@ function atualizaMaterias() {
 
         var usuario = $(jQuery.parseJSON($.session.get('usuario')));
         var userId = usuario["0"].userId;
-        var studentId = usuario["0"].studentId;
+//        var studentId = usuario["0"].studentId;
 //        ARRUMAR
 
         $.ajax({
@@ -865,8 +865,8 @@ function atualizaMaterias() {
             type: 'post',
             contentType: "application/json",
             crossDomain: true,
-            data: JSON.stringify({
-                studentId: studentId,
+             data: JSON.stringify({
+                userId: userId,
                 matter1: materias[0],
                 matter2: materias[1],
                 matter3: materias[2],
