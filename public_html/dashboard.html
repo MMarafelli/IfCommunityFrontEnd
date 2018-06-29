@@ -257,19 +257,19 @@
                 </div>
             </section>
 
-<!--             aqui é o loader que exibe enquanto carrega algo ! 
-            <div class="preloader-wrapper big active">
-                <div class="spinner-layer spinner-blue-only">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div><div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>-->
+            <!--             aqui é o loader que exibe enquanto carrega algo ! 
+                        <div class="preloader-wrapper big active">
+                            <div class="spinner-layer spinner-blue-only">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div><div class="gap-patch">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                            </div>
+                        </div>-->
 
             <!-- bar para o modal e modal logo abaixo !-->  
             <div class="botao-modal">
@@ -379,16 +379,6 @@
 
                 <div class="divDosComentariosRealizados row col s12">
 
-                    <!--                    <div id=11 class="comentariosRealizadosPorUsuarios col s12">
-                                            <div id="nomeUsuarioComentario11" class="col s8">
-                                                Gabriel Guilherme</div>
-                                            <div id="dataComentario" class="col s4">
-                                                2018-06-24 14:51:37.0</div>
-                                            <div id="Comentario" class="textoComentariosRealizados col s12">
-                                                teste comentario via postman
-                                            </div>
-                                        </div>-->
-
                 </div>
 
                 <form id="formDoModalComentarios">
@@ -398,14 +388,17 @@
                         </div>
 
 
-                        <div class="row">
+                        <div class="row col s12">
                             <div class="input-field col s12">
-                                <textarea id="textarea-comentarios" class="materialize-textarea"></textarea>
+                                <textarea maxlength="600" id="textarea-comentarios" class="materialize-textarea"></textarea>
                                 <label for="textarea-comentarios">Comentário</label>
                             </div>
-                        </div>
 
-                        <button type="button" class="modal-action modal-close waves-effect waves-green btn-flat modal-close" id="btn-submeter-comentarios" name="action">Submeter</button>
+
+                            <div id="caracteresRestantesComentario" class="col s10 left-align">Caracteres restantes: 600</div>
+
+                            <button type="button" class="col s2 modal-action modal-close waves-effect waves-green btn-flat modal-close" id="btn-submeter-comentarios" name="action">Submeter</button>
+                        </div>
                     </div>
                 </form>
             </div>

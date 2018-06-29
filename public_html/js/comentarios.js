@@ -56,11 +56,12 @@ function montaComentarios(comentarios) {
         var registerDate = this.registerDate;
         var authorName = this.authorName;
         var commentText = this.commentText;
-        insereComentariosNaTela(commentId, registerDate, authorName, commentText);
+        var postId = this.postId;
+        insereComentariosNaTela(commentId, registerDate, authorName, commentText, postId);
     });
 }
 
-function insereComentariosNaTela(commentId, registerDate, authorName, commentText) {
+function insereComentariosNaTela(commentId, registerDate, authorName, commentText, postId) {
 //   2018-06-25 10:17:33.0
 //   ÀS 21:11 26/06/2018
 
@@ -82,6 +83,7 @@ function insereComentariosNaTela(commentId, registerDate, authorName, commentTex
     registerDate = "às " + horaPostagem + " " + dataComentarioTemp;
 
     $('.divDosComentariosRealizados').append('<div id=' + commentId + ' class="comentariosRealizadosPorUsuarios col s12 acessibilidade"><div id="nomeUsuarioComentario' + commentId + '" class="col s8">' + authorName + '</div><div id="dataComentario" class="col s4 right-align">' + registerDate + '</div><div id="Comentario" class="textoComentariosRealizados col s12">' + commentText + '</div></div>');
+    $('.divDosComentariosRealizados').append('<div class="commentIdToPostId" id="' + postId + '"</div>');
 
 }
 
@@ -94,3 +96,79 @@ function sortResults(array, prop, asc) {
         }
     });
 }
+
+$('#textarea-comentarios').keyup(function () {
+//    M.textareaAutoResize($('#textarea-comentarios'));
+    var commentText = $('#textarea-comentarios').val();
+    var commentSize = commentText.split('').length;
+    var qtdCaract = 600 - commentSize;
+    $('#caracteresRestantesComentario').text();
+    $('#caracteresRestantesComentario').text("Caracteres restantes: " + qtdCaract);
+})
+
+
+$('#btn-submeter-comentarios').click(function () {
+
+    var usuario = $(jQuery.parseJSON($.session.get('usuario')));
+    var userId = usuario["0"].userId;
+//    console.log(userId);
+    var postId = $('.commentIdToPostId').attr('id');
+    var commentText = $('#textarea-comentarios').val();
+
+    var commentSize = commentText.split('');
+
+    if (commentSize.length <= 600) {
+        ajaxToSendComment(userId, postId, commentText);
+    }
+
+});
+
+function ajaxToSendComment(userId, postId, commentText) {
+    $.ajax({
+        url: "https://ifcommunity.herokuapp.com/post/comment",
+        type: 'post',
+        contentType: "application/json",
+        crossDomain: true,
+        data: JSON.stringify({
+            postId: postId,
+            authorId: userId,
+            commentText: commentText
+        }),
+        beforeSend: function () {
+            $("#progressComentarios").show();
+        }
+    })
+            .done(function (critica) {
+                console.log(critica);
+                console.log(typeof (critica));
+                $("#progressComentarios").hide();
+                recuperaComentariosDaPostagem(postId);
+            })
+            .fail(function (jqXHR, textStatus, postagem) {
+                M.toast('Erro ao postar comentário, contate um administrador!', 6000, 'red');
+                $(".preloader-wrapper").hide();
+                if (jqXHR["status"] === 500) {
+                    console.log("Erro 500, não foi possível estabelecer conexão com o servidor!");
+                } else if (jqXHR["status"] === 502) {
+                    console.log("Erro 502, não foi possível estabelecer conexão!");
+                } else if (jqXHR["status"] === 404) {
+                    console.log("Erro 404, não foi encontrado o diretório solicitado!");
+                }
+            });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

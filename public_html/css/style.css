@@ -1085,6 +1085,7 @@ body-principal .box-padrao h4 {
     position: absolute;
     top: 0;
     margin: 6px;
+    border: 1px solid rgba(0, 0, 0, .1);
 }
 
 /*---------------------------------------------------*/
@@ -1325,10 +1326,6 @@ body-principal .box-padrao h4 {
     font-weight: 400;
     letter-spacing: 0.01em;
 }
-/*
-#body-principal .ajuda .tabs {
-        overflow-x: hidden!important;
-}*/
 
 #body-principal .ajuda #section-ajuda > ul > li > div.collapsible-body  ul::-webkit-scrollbar { 
     height: 10px;
@@ -1381,6 +1378,10 @@ body-principal .box-padrao h4 {
     font: 15px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
 }
 
+#body-principal div.commentIdToPostId {
+    display: none;
+}
+
 @media only screen and (min-width: 993px){.row .col.offset-l2 {margin-left: 8.666667%;}}
 
 /*---------------------------------------------------*/
@@ -1415,12 +1416,12 @@ body-principal .box-padrao h4 {
 }
 
 #body-principal .comentariosRealizadosPorUsuarios{
-    width: 90%;
+    width: 95%;
     background-color: #fff;
     margin: 0;
     border: 1px solid #e0e0e0;
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
     margin-top: 5px;
     margin-bottom: 5px;
 }
@@ -1456,9 +1457,10 @@ body-principal .box-padrao h4 {
 }
 
 #body-principal #textarea-comentarios {
-    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font: 18px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     margin: 0;
     height: 80px!important;
+    overflow-y: auto;
 }
 
 #footer-comentarios > div,
@@ -1474,6 +1476,10 @@ body-principal .box-padrao h4 {
 
 #body-principal #btn-submeter-comentarios {
     margin: 0;
+}
+
+#body-principal #caracteresRestantesComentario{
+    font-size: 16px;
 }
 /*---------------------------------------------------*/
 
